@@ -1,0 +1,838 @@
+{
+  "pbtResults": {
+    "1. Write bug condition exploration test": {
+      "status": "passed",
+      "failingExample": "G2 counterexample: ocr.py source contains \"sudo apt-get install tesseract-ocr\" in both OcrUnavailableError raise sites (2 occurrences), no \"UB-Mannheim\" or \"winget\" present.\n\nG4 counterexample (Hindi): classify(\"आपका SBI KYC पेंडिंग है, आज खाता ब्लॉक हो जाएगा\") → clean_text=\"आपका sbi kyc पेंडिंग है, आज खाता ब्लॉक हो जाएगा\", panic_tags=['KYC'], matches=[] — KYC tag fires but fuzzy matching against English phrases scores below threshold; 0 typology matches returned for a genuine scam message.\n\nG4 counterexample (Telugu): classify(\"మీ విద్యుత్ కనెక్షన్ నేడు రాత్రి కత్తిరించబడుతుంది\") → clean_text unchanged, panic_tags=[], matches=[] — zero matches for a genuine electricity disconnection scam.\n\nG6 counterexample: local_pipeline_test.py exits 0 with exactly 5 samples (Fake KYC SMS, Fake PM-KISAN message, Clean non-scam message, Lookalike phishing URL only, Digital arrest scam call description). Output contains no Devanagari or Telugu characters — native-script path is entirely unexercised.",
+      "lastRunTimestamp": 1783255715652
+    },
+    "2. Write preservation property tests (BEFORE implementing fixes)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783256107298
+    },
+    "5.1 Write PBT for URL security boundary (Property 3 — C1 re-confirmation)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783339428613
+    },
+    "5.2 Write PBT for scheme no-fabrication (Property 5 — C3 re-confirmation)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783339591156
+    },
+    "7.1 Re-run PBT preservation suite on fixed codebase": {
+      "status": "passed",
+      "lastRunTimestamp": 1783342827048
+    }
+  },
+  "executionHistory": {
+    "0.1 Create and activate a virtual environment": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253463794
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253477632
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253561994
+      }
+    ],
+    "0.2 Install Python dependencies": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253465809
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253566034
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255013604
+      }
+    ],
+    "0.3 Verify all project modules import cleanly": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466008
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255017813
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255164116
+      }
+    ],
+    "0.4 Verify Tesseract is installed with hin and tel language packs": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466075
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255172954
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255259037
+      }
+    ],
+    "0.5 Verify ffmpeg is installed": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466154
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255263880
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255480218
+      }
+    ],
+    "1. Write bug condition exploration test": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466232
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255485246
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255735430
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fixes)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466304
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255739213
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783256130739
+      }
+    ],
+    "3.1 Fix ocr.py — replace Linux-only error messages with Windows-correct instructions": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466406
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783256138707
+      },
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783256359162
+      }
+    ],
+    "3.2 Fix voice_pipeline.py — replace Linux-only ffmpeg error message with Windows-correct instructions": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466478
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783260943251
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783260986140
+      }
+    ],
+    "3.3 Fix local_pipeline_test.py — add to_english_for_matching() call before classify()": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466561
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783260994346
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783261248422
+      }
+    ],
+    "3.4 Fix local_pipeline_test.py — add two native-script test samples": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466637
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783261258031
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783261293390
+      }
+    ],
+    "3.5 Fix local_pipeline_test.py — add working-directory comment and fast-fail guard": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466708
+      },
+      {
+        "executionId": "da76006d-f70b-4469-9e5e-4d103ddd38c3",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783261298066
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338608731
+      }
+    ],
+    "4.1 Write unit tests for url_agent structural checks": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466774
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338440039
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338758307
+      }
+    ],
+    "4.2 Write unit tests for normalize()": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466844
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338615520
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338758985
+      }
+    ],
+    "4.3 Write unit tests for classify()": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253466954
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338625219
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338759745
+      }
+    ],
+    "4.4 Write unit tests for scheme_check no-fabrication (format_scheme_layout)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467040
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338626299
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338760735
+      }
+    ],
+    "4.5 Write unit tests for rate_limiter": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467157
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338627146
+      },
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338761581
+      }
+    ],
+    "4.6 Write unit tests for validate_language()": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467239
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338954759
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339152584
+      }
+    ],
+    "4.7 Run all unit tests and confirm they pass": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467321
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339166451
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339313608
+      }
+    ],
+    "5.1 Write PBT for URL security boundary (Property 3 — C1 re-confirmation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467395
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339322839
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339448696
+      }
+    ],
+    "5.2 Write PBT for scheme no-fabrication (Property 5 — C3 re-confirmation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467469
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339468456
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339612162
+      }
+    ],
+    "5.3 Write PBT for Latin-script preservation (Property 4 preservation clause)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467540
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339623572
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339745511
+      }
+    ],
+    "5.4 Run all property-based tests and confirm they pass": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467621
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339762974
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339929590
+      }
+    ],
+    "6.1 Verify G2 fix — error messages no longer contain Linux-only instructions": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467692
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339954032
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340072199
+      }
+    ],
+    "6.2 Verify G4 fix — native-script scam messages now produce typology matches": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467761
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340107691
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340408699
+      }
+    ],
+    "6.3 Verify G6 fix — local_pipeline_test.py exits 0 with all 7 samples and native-script matches": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467829
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340415856
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340511370
+      }
+    ],
+    "6.4 Verify G5 — scheme formatter fallback strings are exact (runtime confirmation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467904
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340517889
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340626762
+      }
+    ],
+    "7.1 Re-run PBT preservation suite on fixed codebase": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253467984
+      },
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340634231
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783342844035
+      }
+    ],
+    "7.2 Verify URL \"unknown\" verdict when no API keys are set (preservation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468104
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340776625
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343045646
+      }
+    ],
+    "7.3 Verify G3 security boundary with line-number evidence table (static analysis)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468172
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343055994
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343200351
+      }
+    ],
+    "7.4 Verify validate_language() still returns HTTP 400 for unsupported language (preservation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468238
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343211843
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343409942
+      }
+    ],
+    "7.5 Verify rate limiter still fires at the 4th request (preservation)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468310
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343414963
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343522316
+      }
+    ],
+    "8.1 Verify English text verification endpoint": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468400
+      },
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343534955
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783348799257
+      }
+    ],
+    "8.2 Verify clean (non-scam) message returns zero matches": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468472
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783348810562
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349155414
+      }
+    ],
+    "8.3 Verify Devanagari scam message is classified via API": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468547
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349160594
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349283323
+      }
+    ],
+    "8.4 Verify unsupported language param returns HTTP 400 (not HTTP 500)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468617
+      },
+      {
+        "executionId": "ec93e6d8-efb6-4d02-8f95-e7cc3b280a99",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349289565
+      },
+      {
+        "executionId": "e6230764-addc-4892-bfcc-86ecf550ef77",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349527573
+      }
+    ],
+    "8.5 Verify rate limiter fires at 4th request via real server": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468693
+      },
+      {
+        "executionId": "e6230764-addc-4892-bfcc-86ecf550ef77",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349435129
+      },
+      {
+        "executionId": "e6230764-addc-4892-bfcc-86ecf550ef77",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349528041
+      }
+    ],
+    "8.6 Verify scheme search endpoint with null-field scheme": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468791
+      },
+      {
+        "executionId": "e6230764-addc-4892-bfcc-86ecf550ef77",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349538591
+      },
+      {
+        "executionId": "3bfcb502-364b-4870-b204-c4b9e6ae09fd",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350019075
+      }
+    ],
+    "8.7 Verify empty search query returns HTTP 400": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468860
+      },
+      {
+        "executionId": "3bfcb502-364b-4870-b204-c4b9e6ae09fd",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783349873631
+      },
+      {
+        "executionId": "3bfcb502-364b-4870-b204-c4b9e6ae09fd",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350025166
+      }
+    ],
+    "8.8 Verify no-API-keys URL check returns \"unknown\" not \"safe\" (server-level)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468931
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350865209
+      }
+    ],
+    "8.9 Verify frontend loads at http://localhost:8000": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253468994
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350871405
+      }
+    ],
+    "9.1 Run the complete test suite one final time": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253469054
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350877244
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351237134
+      }
+    ],
+    "9.2 Run local_pipeline_test.py and capture final output": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253469120
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350878181
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351238049
+      }
+    ],
+    "9.3 Confirm IndicTrans2 models actually ran inference (not just installed)": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253469183
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351244592
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351368247
+      }
+    ],
+    "9.4 Produce final verification report": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783253469257
+      },
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351373681
+      },
+      {
+        "executionId": "a0b410b3-922a-4d54-acd4-b161321e2dcb",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351763669
+      }
+    ],
+    "0. Set up the Python environment and confirm system dependencies": [
+      {
+        "executionId": "27fc996e-b5b0-424d-b147-39869251e896",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783255480361
+      }
+    ],
+    "3. Apply code fixes for G2, G4, and G6": [
+      {
+        "executionId": "45cf78f9-25df-49f7-936c-96856629da63",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783338608908
+      }
+    ],
+    "4. Create and run unit tests (test_unit.py)": [
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339313727
+      }
+    ],
+    "5. Create and run property-based tests (test_pbt.py)": [
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783339929712
+      }
+    ],
+    "6. Verify bug condition exploration test now passes (after fixes)": [
+      {
+        "executionId": "4b93ec9a-5b03-431c-ba64-bb3adffdf326",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783340626954
+      }
+    ],
+    "7. Verify preservation tests still pass after all fixes": [
+      {
+        "executionId": "8da459e1-12ed-4c30-b4f0-90efe9bb1353",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783343522408
+      }
+    ],
+    "8. Run server-based integration and endpoint tests": [
+      {
+        "executionId": "1a339dc3-d420-424c-9f2a-ef77f17bb189",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783350871567
+      }
+    ],
+    "9. Checkpoint — Ensure all tests pass and produce final verification report": [
+      {
+        "executionId": "a0b410b3-922a-4d54-acd4-b161321e2dcb",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783351763987
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+# Databases
+*.db
+*.db-journal
+*.sqlite
+
+# Secrets / Configuration
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env/
+
+# IDEs
+.vscode/
+.idea/
+.gemini/
+antigravity-ide/
+
+# Logs
+*.log

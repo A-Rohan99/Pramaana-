@@ -1,0 +1,90 @@
+[
+  {
+    "scheme_name": "PM-KISAN",
+    "full_name": "Pradhan Mantri Kisan Samman Nidhi",
+    "benefit": "Rs 6,000 per year in three installments of Rs 2,000, paid directly to bank account via DBT",
+    "eligibility": "Small and marginal farmer families with cultivable landholding, registered on pmkisan.gov.in",
+    "location": null,
+    "required_documents": "Aadhaar card, land records, bank account details",
+    "contact_info": null,
+    "real_process": "Installments are credited automatically via DBT to the registered, Aadhaar-linked bank account. No SMS link, phone call, or app download is ever required to 'unlock' or 'verify' an installment.",
+    "official_source": "pmkisan.gov.in"
+  },
+  {
+    "scheme_name": "Ayushman Bharat",
+    "full_name": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+    "benefit": "Health cover up to Rs 5 lakh per family per year for secondary and tertiary hospitalization",
+    "eligibility": "Families identified via SECC 2011 database or state-specific extension criteria",
+    "location": null,
+    "required_documents": "Ayushman card, Aadhaar card, ration card (if applicable)",
+    "contact_info": "PM-JAY helpline: 14555",
+    "real_process": "Treatment is cashless at empanelled hospitals using the Ayushman card. There is no separate 'activation fee', 'processing charge', or OTP-based unlock step.",
+    "official_source": "pmjay.gov.in"
+  },
+  {
+    "scheme_name": "PMAY",
+    "full_name": "Pradhan Mantri Awas Yojana",
+    "benefit": "Financial assistance / interest subsidy for construction or purchase of a house",
+    "eligibility": "Economically weaker sections, low and middle income groups without a pucca house, per income-band criteria",
+    "location": null,
+    "required_documents": "Aadhaar card, income certificate, property documents",
+    "contact_info": null,
+    "real_process": "Subsidy is credited to the beneficiary's loan account or bank account through the lending bank/DBT. No advance 'processing fee' is collected via UPI or QR code.",
+    "official_source": "pmaymis.gov.in"
+  },
+  {
+    "scheme_name": "PM Ujjwala Yojana",
+    "full_name": "Pradhan Mantri Ujjwala Yojana",
+    "benefit": "Free LPG gas connection to women from below-poverty-line households",
+    "eligibility": "Adult woman from a BPL household without an existing LPG connection",
+    "location": "Available through local LPG distributors nationwide",
+    "required_documents": "BPL ration card, Aadhaar card, bank account details",
+    "contact_info": "Local LPG distributor office",
+    "real_process": "Connection is issued through the local LPG distributor after standard KYC at time of application -- not via a WhatsApp link or remote 'verification call'.",
+    "official_source": "pmuy.gov.in"
+  },
+  {
+    "scheme_name": "Kisan Credit Card (KCC)",
+    "full_name": "Kisan Credit Card Scheme",
+    "benefit": "Short-term credit for agricultural and allied needs at concessional interest (around 4% with timely repayment)",
+    "eligibility": "Farmers, including tenant farmers and sharecroppers, with land records or equivalent documentation",
+    "location": "Apply at any public or private sector bank branch",
+    "required_documents": "Land records, Aadhaar card, passport-size photo",
+    "contact_info": null,
+    "real_process": "Applications and renewals are processed only at the issuing bank branch. Banks never ask for KCC renewal via SMS link or demand a 'middleman fee' to process a renewal.",
+    "official_source": "Respective public/private sector bank branch"
+  },
+  {
+    "scheme_name": "PM Fasal Bima Yojana",
+    "full_name": "Pradhan Mantri Fasal Bima Yojana",
+    "benefit": "Crop insurance covering yield loss due to natural calamities, pests, and diseases",
+    "eligibility": "Farmers growing notified crops in notified areas, loanee and non-loanee farmers both covered",
+    "location": null,
+    "required_documents": "Land records, bank account details, sowing certificate",
+    "contact_info": "PMFBY helpline: 14447",
+    "real_process": "Claims are assessed via Crop Cutting Experiments / remote sensing and settled to the bank account on record. No separate 'claim release fee' is ever collected from farmers.",
+    "official_source": "pmfby.gov.in"
+  },
+  {
+    "scheme_name": "National Scholarship Portal schemes",
+    "full_name": "Various central/state scholarships via NSP",
+    "benefit": "Scholarship amount varies by scheme, disbursed via DBT to student bank account",
+    "eligibility": "Varies by scheme -- typically income and academic criteria for school/college students",
+    "location": null,
+    "required_documents": "Income certificate, institution ID, bank account details, Aadhaar card",
+    "contact_info": null,
+    "real_process": "Disbursement happens only after institution verification through the NSP portal. No scholarship scheme asks for an upfront 'processing fee' by UPI to release funds.",
+    "official_source": "scholarships.gov.in"
+  },
+  {
+    "scheme_name": "PM Vishwakarma Scheme",
+    "full_name": "Pradhan Mantri Vishwakarma Yojana",
+    "benefit": "The scheme provides comprehensive support to traditional artisans and craftspeople, including recognition through a PM Vishwakarma certificate and ID card, skill upgradation with basic (5-7 days) and advanced (15+ days) training and a stipend of ₹500 per day, toolkit assistance with an e-voucher of up to ₹15,000, collateral-free credit support with loans up to ₹3 lakh (₹1 lakh first tranche, ₹2 lakh second tranche) at an interest rate of 5% with an 8% government interest subvention, an incentive of ₹1 per digital transaction (up to 100 transactions per month), and marketing support for quality certification, branding, e-commerce linkage, and trade fairs.",
+    "eligibility": "Applicants must be artisans or craftspeople, at least 18 years of age on the date of registration, engaged in self-employment in the unorganised sector, working with hands and tools in one of the 18 specified family-based traditional trades. They should not have availed loans under similar credit-based schemes of the Central Government or State Government (e.g., PMEGP, PM SVANidhi, MUDRA) in the past 5 years. Only one member from a family (defined as husband, wife, and unmarried children) is eligible. Individuals in government service and their family members are not eligible.",
+    "location": "Nationwide, covering both rural and urban areas across India.",
+    "required_documents": "Aadhaar card, Mobile number, Bank account details, Ration card (or Aadhaar card of all family members if a ration card is not available).",
+    "contact_info": "Toll-free numbers: 18002677777, 17923. Champions Desk (Ministry of MSME) Email: champions@gov.in, Contact Number: 011-23061574.",
+    "real_process": "Eligible beneficiaries must register through Common Service Centres (CSCs) by completing mobile verification and Aadhaar e-KYC on the PM Vishwakarma portal. The application undergoes a three-step verification process, including verification at the Gram Panchayat/Urban Local Body (ULB) level, vetting and recommendation by the District Implementation Committee, and approval by the Screening Committee. After successful registration, artisans receive a PM Vishwakarma Digital ID and Certificate. They can then avail benefits such as skill training (basic training is mandatory for the first loan tranche), toolkit incentives, and apply for collateral-free 'Enterprise Development Loans'. The first loan tranche (up to ₹1 lakh) is disbursed upon completion of basic training, while the second tranche (up to ₹2 lakh) is available after repaying the first loan, maintaining a standard loan account, adopting digital transactions in their business, and/or completing advanced training.",
+    "official_source": "https://pmvishwakarma.gov.in/"
+  }
+]

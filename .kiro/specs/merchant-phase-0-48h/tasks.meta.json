@@ -1,0 +1,106 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "0.1 Set up JWT authentication infrastructure": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668664816
+      },
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668671070
+      },
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783672545719
+      }
+    ],
+    "0.2 Set up JWT middleware and request scope injection": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665077
+      },
+      {
+        "executionId": "61dd22a3-1e51-489d-95eb-8a2b65763800",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783672604662
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783673885112
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783674194251
+      }
+    ],
+    "0.3 Implement `/auth/signup` endpoint": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665207
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783674196451
+      }
+    ],
+    "0.4 Implement `/auth/login` endpoint": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665430
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783674197274
+      }
+    ],
+    "0.5 Create demo merchant fixture script": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665549
+      }
+    ],
+    "0.6 Verify core scam verification pipeline still works (regression check)": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665646
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783673886348
+      },
+      {
+        "executionId": "c4090d89-b84b-43b6-8568-dedd94e92036",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783674195031
+      }
+    ],
+    "0.7 Implement frontend login/logout UI": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665742
+      }
+    ],
+    "0.8 Phase 0 checkpoint — comprehensive end-to-end verification": [
+      {
+        "executionId": "c9a0afe0-e70b-43b5-90b7-a2a8ee51480b",
+        "chatSessionId": "sess_44d44218-1187-48bd-8afb-3868275b2002",
+        "timestamp": 1783668665813
+      }
+    ]
+  }
+}

@@ -1,0 +1,208 @@
+﻿C:\Users\rohan\OneDrive\project\satark_setu\.venv\Lib\site-packages\transformers\tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+Building scheme collection (first run seeds ChromaDB from data/schemes_seed.json)...
+Ready.
+======================================================================
+
+### Fake KYC SMS
+Input: Dear customer your SBI KYC is pending, account will be BLOCKED today. Update immediately: https://sbi-verify.secure-kyc-update.co.in/login
+
+-- normalize.py --
+clean_text : dear customer your sbi kyc is pending, account will be blocked today. update immediately: https://sbi-verify.secure-kyc-update.co.in/login
+panic_tags : ['KYC', 'URGENT']
+
+-- classifier.py --
+  [90.4186046511628%] Fake KYC update request
+          advice: Banks never ask for OTP, PIN, or a link-based 'KYC update' by SMS or WhatsApp -- KYC updates happen at a branch or the bank's official app only.
+
+-- url_agent.py --
+  https://sbi-verify.secure-kyc-update.co.in/login
+    verdict: structurally_suspicious
+    - Unusually deep subdomain structure, common in phishing URLs
+    - Domain resembles 'sbi.co.in' but is not an exact match -- possible lookalike
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: Kisan Credit Card (KCC)
+    Eligibility        : Farmers, including tenant farmers and sharecroppers, with land records or equivalent documentation
+    Location           : Apply at any public or private sector bank branch
+    Required Documents : Land records, Aadhaar card, passport-size photo
+    Contact Info       : Visit official website: Respective public/private sector bank branch
+    Real process       : Applications and renewals are processed only at the issuing bank branch. Banks never ask for KCC renewal via SMS link or demand a 'middleman fee' to process a renewal.
+======================================================================
+
+### Fake PM-KISAN message
+Input: PM Kisan 15th installment ka kist pending hai, turant apna Aadhaar verify karein warna payment cancel ho jayega: http://bit.ly/pmkisan15
+
+-- normalize.py --
+clean_text : pm kisan 15th installment ka kist pending hai, turant apna aadhaar verify karein warna payment cancel ho jayega: http://bit.ly/pmkisan15
+panic_tags : ['URGENT']
+
+-- classifier.py --
+  No typology matched above threshold.
+
+-- url_agent.py --
+  http://bit.ly/pmkisan15
+    verdict: structurally_suspicious
+    - Uses a link shortener (bit.ly) that hides the real destination
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: PM-KISAN
+    Eligibility        : Small and marginal farmer families with cultivable landholding, registered on pmkisan.gov.in
+    Location           : No location restriction -- apply online only
+    Required Documents : Aadhaar card, land records, bank account details
+    Contact Info       : Visit official website: pmkisan.gov.in
+    Real process       : Installments are credited automatically via DBT to the registered, Aadhaar-linked bank account. No SMS link, phone call, or app download is ever required to 'unlock' or 'verify' an installment.
+======================================================================
+
+### Clean, non-scam message
+Input: Hey, are we still meeting for lunch at 1pm tomorrow near the office?
+
+-- normalize.py --
+clean_text : hey, are we still meeting for lunch at 1pm tomorrow near the office?
+panic_tags : []
+
+-- classifier.py --
+  No typology matched above threshold.
+
+-- url_agent.py --
+  No URLs found in message.
+
+-- scheme_check.py --
+  Matched scheme: PM Ujjwala Yojana
+    Eligibility        : Adult woman from a BPL household without an existing LPG connection
+    Location           : Available through local LPG distributors nationwide
+    Required Documents : BPL ration card, Aadhaar card, bank account details
+    Contact Info       : Local LPG distributor office
+    Real process       : Connection is issued through the local LPG distributor after standard KYC at time of application -- not via a WhatsApp link or remote 'verification call'.
+======================================================================
+
+### Lookalike phishing URL only
+Input: Your parcel is held at customs, pay duty here to release: https://indiapost.gov.in.duty-clearance.info/pay
+
+-- normalize.py --
+clean_text : your parcel is held at customs, pay duty here to release: https://indiapost.gov.in.duty-clearance.info/pay
+panic_tags : ['CUSTOMS']
+
+-- classifier.py --
+  [93.24590163934427%] Courier / customs parcel scam
+          advice: Customs and courier companies do not collect duty payments over phone calls or UPI -- verify directly on the courier company's official app or website.
+
+-- url_agent.py --
+  https://indiapost.gov.in.duty-clearance.info/pay
+    verdict: structurally_suspicious
+    - Unusually deep subdomain structure, common in phishing URLs
+    - Domain resembles 'indiapost.gov.in' but is not an exact match -- possible lookalike
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: PM-KISAN
+    Eligibility        : Small and marginal farmer families with cultivable landholding, registered on pmkisan.gov.in
+    Location           : No location restriction -- apply online only
+    Required Documents : Aadhaar card, land records, bank account details
+    Contact Info       : Visit official website: pmkisan.gov.in
+    Real process       : Installments are credited automatically via DBT to the registered, Aadhaar-linked bank account. No SMS link, phone call, or app download is ever required to 'unlock' or 'verify' an installment.
+======================================================================
+
+### Digital arrest scam call description
+Input: Caller said do not disconnect this video call, you are under digital arrest, CBI investigation against you, aadhaar linked to a crime.
+
+-- normalize.py --
+clean_text : caller said do not disconnect this video call, you are under digital arrest, cbi investigation against you, aadhaar linked to a crime.
+panic_tags : ['ARREST']
+
+-- classifier.py --
+  [100%] Digital arrest / fake law enforcement
+          advice: Real police never conduct arrests, investigations, or 'verification' over a phone or video call, and never demand you stay on a call under threat.
+  [60.0%] Fake refund / cashback QR scam
+          advice: You never need to scan a QR code or enter your UPI PIN to RECEIVE money -- PIN entry only ever sends money out.
+
+-- url_agent.py --
+  No URLs found in message.
+
+-- scheme_check.py --
+  Matched scheme: PM Ujjwala Yojana
+    Eligibility        : Adult woman from a BPL household without an existing LPG connection
+    Location           : Available through local LPG distributors nationwide
+    Required Documents : BPL ration card, Aadhaar card, bank account details
+    Contact Info       : Local LPG distributor office
+    Real process       : Connection is issued through the local LPG distributor after standard KYC at time of application -- not via a WhatsApp link or remote 'verification call'.
+======================================================================
+
+### Hindi Devanagari KYC scam
+Input: αñåαñ¬αñòαñ╛ SBI KYC αñ¬αÑçαñéαñíαñ┐αñéαñù αñ╣αÑê, αñåαñ£ αñûαñ╛αññαñ╛ αñ¼αÑìαñ▓αÑëαñò αñ╣αÑï αñ£αñ╛αñÅαñùαñ╛αÑñ αññαÑüαñ░αñéαññ αñ»αñ╣αñ╛αñü αñòαÑìαñ▓αñ┐αñò αñòαñ░αÑçαñé: https://sbi-kyc-secure.in/verify
+
+-- normalize.py --
+clean_text : αñåαñ¬αñòαñ╛ sbi kyc αñ¬αÑçαñéαñíαñ┐αñéαñù αñ╣αÑê, αñåαñ£ αñûαñ╛αññαñ╛ αñ¼αÑìαñ▓αÑëαñò αñ╣αÑï αñ£αñ╛αñÅαñùαñ╛αÑñ αññαÑüαñ░αñéαññ αñ»αñ╣αñ╛αñü αñòαÑìαñ▓αñ┐αñò αñòαñ░αÑçαñé: https://sbi-kyc-secure.in/verify
+panic_tags : ['KYC']
+
+-- classifier.py --
+  No typology matched above threshold.
+
+-- url_agent.py --
+  https://sbi-kyc-secure.in/verify
+    verdict: structurally_suspicious
+    - Domain resembles 'sbi.co.in' but is not an exact match -- possible lookalike
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: Ayushman Bharat
+    Eligibility        : Families identified via SECC 2011 database or state-specific extension criteria
+    Location           : No location restriction -- apply online only
+    Required Documents : Ayushman card, Aadhaar card, ration card (if applicable)
+    Contact Info       : PM-JAY helpline: 14555
+    Real process       : Treatment is cashless at empanelled hospitals using the Ayushman card. There is no separate 'activation fee', 'processing charge', or OTP-based unlock step.
+======================================================================
+
+### Telugu electricity disconnection scam
+Input: α░«α▒Ç α░╡α░┐α░ªα▒ìα░»α▒üα░ñα▒ì α░òα░¿α▒åα░òα▒ìα░╖α░¿α▒ì α░¿α▒çα░íα▒ü α░░α░╛α░ñα▒ìα░░α░┐ α░òα░ñα▒ìα░ñα░┐α░░α░┐α░éα░Üα░¼α░íα▒üα░ñα▒üα░éα░ªα░┐αÑñ α░ªα░»α░Üα▒çα░╕α░┐ α░çα░¬α▒ìα░¬α▒üα░íα▒ç α░Üα▒åα░▓α▒ìα░▓α░┐α░éα░Üα░éα░íα░┐: http://tsecil-pay.in
+
+-- normalize.py --
+clean_text : α░«α▒Ç α░╡α░┐α░ªα▒ìα░»α▒üα░ñα▒ì α░òα░¿α▒åα░òα▒ìα░╖α░¿α▒ì α░¿α▒çα░íα▒ü α░░α░╛α░ñα▒ìα░░α░┐ α░òα░ñα▒ìα░ñα░┐α░░α░┐α░éα░Üα░¼α░íα▒üα░ñα▒üα░éα░ªα░┐αÑñ α░ªα░»α░Üα▒çα░╕α░┐ α░çα░¬α▒ìα░¬α▒üα░íα▒ç α░Üα▒åα░▓α▒ìα░▓α░┐α░éα░Üα░éα░íα░┐: http://tsecil-pay.in
+panic_tags : []
+
+-- classifier.py --
+  No typology matched above threshold.
+
+-- url_agent.py --
+  http://tsecil-pay.in
+    verdict: unknown
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: PM-KISAN
+    Eligibility        : Small and marginal farmer families with cultivable landholding, registered on pmkisan.gov.in
+    Location           : No location restriction -- apply online only
+    Required Documents : Aadhaar card, land records, bank account details
+    Contact Info       : Visit official website: pmkisan.gov.in
+    Real process       : Installments are credited automatically via DBT to the registered, Aadhaar-linked bank account. No SMS link, phone call, or app download is ever required to 'unlock' or 'verify' an installment.
+======================================================================
+
+### Hindi PM-KISAN native script
+Input: αñ¬αÑìαñ░αñ┐αñ» αñòαñ┐αñ╕αñ╛αñ¿, αñåαñ¬αñòαÑÇ PM Kisan αñòαÑÇ 15αñ╡αÑÇαñé αñòαñ┐αñ╕αÑìαññ αñ░αÑüαñòαÑÇ αñ╣αÑüαñê αñ╣αÑêαÑñ αñàαñ¡αÑÇ Aadhaar αñ╕αññαÑìαñ»αñ╛αñ¬αñ┐αññ αñòαñ░αÑçαñé: http://bit.ly/pmkisan-hin
+
+-- normalize.py --
+clean_text : αñ¬αÑìαñ░αñ┐αñ» αñòαñ┐αñ╕αñ╛αñ¿, αñåαñ¬αñòαÑÇ pm kisan αñòαÑÇ 15αñ╡αÑÇαñé αñòαñ┐αñ╕αÑìαññ αñ░αÑüαñòαÑÇ αñ╣αÑüαñê αñ╣αÑêαÑñ αñàαñ¡αÑÇ aadhaar αñ╕αññαÑìαñ»αñ╛αñ¬αñ┐αññ αñòαñ░αÑçαñé: http://bit.ly/pmkisan-hin
+panic_tags : []
+
+-- classifier.py --
+  No typology matched above threshold.
+
+-- url_agent.py --
+  http://bit.ly/pmkisan-hin
+    verdict: structurally_suspicious
+    - Uses a link shortener (bit.ly) that hides the real destination
+    (safe_browsing_checked=False, virustotal_checked=False)
+
+-- scheme_check.py --
+  Matched scheme: PM-KISAN
+    Eligibility        : Small and marginal farmer families with cultivable landholding, registered on pmkisan.gov.in
+    Location           : No location restriction -- apply online only
+    Required Documents : Aadhaar card, land records, bank account details
+    Contact Info       : Visit official website: pmkisan.gov.in
+    Real process       : Installments are credited automatically via DBT to the registered, Aadhaar-linked bank account. No SMS link, phone call, or app download is ever required to 'unlock' or 'verify' an installment.
+======================================================================

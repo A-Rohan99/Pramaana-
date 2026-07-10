@@ -1,0 +1,24 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.12
+pytesseract==0.3.13
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+Pillow==10.4.0
+rapidfuzz==3.10.0
+chromadb==0.5.5
+sentence-transformers==3.1.1
+python-dotenv==1.0.1
+requests==2.32.3
+openai-whisper==20240930
+# Local, offline translation (AI4Bharat IndicTrans2) -- no API key.
+# IndicTransToolkit isn't on PyPI, so it's installed straight from its
+# git repo; pip supports this line directly.
+torch==2.4.1
+transformers==4.44.2
+sentencepiece==0.2.0
+git+https://github.com/VarunGumma/IndicTransToolkit.git@main#egg=IndicTransToolkit
+# Gemini API -- for online government scheme lookup with Search Grounding.
+google-genai>=1.0.0
+pypdf==4.3.1
+PyJWT==2.9.0
