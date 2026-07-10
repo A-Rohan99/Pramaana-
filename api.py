@@ -1178,6 +1178,7 @@ async def ledger_chat(request: Request):
     body     = await request.json()
     question = (body.get("question") or "").strip()
     month    = body.get("month")
+    language = validate_language(body.get("language", "english"))
 
     if not question:
         raise HTTPException(status_code=400, detail="question is required")
@@ -1239,7 +1240,8 @@ async def ledger_chat(request: Request):
         "You are an expert AI Business Copilot for a small Indian shopkeeper (kirana/grocery/medical store). "
         "You have access to their complete financial ledger, inventory, supplier history, and sales velocity. "
         "Be warm, practical, and use ₹ for amounts. Speak like a trusted CA friend, not a corporate bot. "
-        f"{mode_instruction}"
+        f"{mode_instruction}\n"
+        f"You MUST generate the entire response in the '{language.capitalize()}' language."
     )
     user_prompt = (
         f"Business data:\n{_json.dumps(context, ensure_ascii=False, indent=2)[:3000]}\n\n"
@@ -1262,7 +1264,7 @@ async def ledger_chat(request: Request):
 # =============================================================================
 
 @app.get("/api/dashboard/narrative")
-def monthly_narrative(month: str | None = None):
+def monthly_narrative(month: str | None = None, language: str = "english"):
     """
     Generate a plain-language accountant's summary of the month's financials.
     """
@@ -1293,7 +1295,8 @@ def monthly_narrative(month: str | None = None):
         "You are a friendly accountant summarising a small Indian shopkeeper's month. "
         "Write 3–5 sentences in a warm, plain tone — like a friend who is also a CA. "
         "Highlight key wins, one concern to watch, and end with a practical tip. "
-        "Use ₹ for amounts. Do NOT use bullet points — write flowing prose.\n\n"
+        "Use ₹ for amounts. Do NOT use bullet points — write flowing prose.\n"
+        f"You MUST generate the entire summary in the '{language.capitalize()}' language.\n\n"
         f"Financial data:\n{_json.dumps(context, ensure_ascii=False, indent=2)}"
     )
 
@@ -1312,6 +1315,9 @@ def monthly_narrative(month: str | None = None):
             f"You processed {stats.get('confirmed_txns',0)} confirmed transactions. "
             f"Keep reviewing your spending categories to find savings!"
         )
+        if language != "english":
+            from translate import translate_text
+            narrative = translate_text(narrative, language)
 
     return {"month": stats.get("active_month"), "narrative": narrative}
 
@@ -1406,7 +1412,7 @@ def export_csv(month: str | None = None):
 # =============================================================================
 
 @app.get("/api/dashboard/insights")
-async def get_insights(month: str | None = None):
+async def get_insights(month: str | None = None, language: str = "english"):
     """
     Unified AI Decision Intelligence endpoint.
     Returns all 10 insight modules in a single response:

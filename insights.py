@@ -361,6 +361,7 @@ def generate_insights(
     suppliers: list,
     dues: list,
     memory: dict,
+    language: str = "english",
 ) -> dict:
     """
     Main entry point.  Tries LLM first; falls back to rule-based on any failure.
@@ -368,17 +369,14 @@ def generate_insights(
     """
     # If no meaningful data exists, return a friendly onboarding state
     if not inventory and not stats.get("confirmed_txns"):
-        return {
-            "empty_state": True,
-            "message": (
-                "No business data found yet. Start by adding products to inventory "
-                "and recording transactions via the Telegram bot or manual cash entry."
-            ),
-            **_rule_based_insights([], [], []),
-        }
+        return _empty_onboarding_state(language)
 
     snapshot = _build_snapshot(inventory, stats, velocity, suppliers, dues, memory)
-    prompt = _PROMPT.format(snapshot=snapshot)
+    prompt = (
+        "You act as the AI Brain for a retail inventory system. Your task is to analyze raw store data and provide actionable recommendations.\n"
+        f"You MUST generate the content values of the JSON in the '{language.capitalize()}' language. Keys must remain in English.\n"
+        "Return ONLY valid JSON matching this schema:\n\n"
+    ) + _PROMPT.format(snapshot=snapshot)
 
     # Try LLM (with one retry)
     result = None
@@ -397,6 +395,33 @@ def generate_insights(
     # Sanitise: ensure all required top-level keys exist
     _ensure_keys(result)
     return result
+
+
+def _empty_onboarding_state(language="english") -> dict:
+    from translate import translate_text
+    
+    def t(text):
+        return translate_text(text, language) if language != "english" else text
+        
+    return {
+        "business_copilot": {
+            "health_status": "good",
+            "health_label": t("Ready to Grow"),
+            "root_causes": [],
+            "priority_actions": [],
+        },
+        "pricing_optimization": [],
+        "demand_forecast": [],
+        "purchase_recommendations": [],
+        "supplier_intelligence": [],
+        "promotions": [],
+        "bundles": [],
+        "profit_leakage": {
+            "total_estimated_loss": 0,
+            "breakdown": []
+        },
+        "business_memory_update": {},
+    }
 
 
 def _ensure_keys(data: dict) -> None:

@@ -1058,12 +1058,12 @@ details > div{padding-top:12px;}
             </div>
             <!-- ── Import CSV panel ──────────────────────────────────── -->
             <div class="panel" data-panel="import">
-              <p style="font-size:.83rem;color:var(--text-2);margin-bottom:10px;">Upload a transaction history CSV exported from your UPI app. We'll import all clean transactions into your ledger.</p>
+              <p id="csvImportDesc" style="font-size:.83rem;color:var(--text-2);margin-bottom:10px;">Upload a transaction history CSV exported from your UPI app. We'll import all clean transactions into your ledger.</p>
               <div class="app-selector" id="appSelector">
-                <button class="app-btn active" data-app="auto">Auto-detect</button>
-                <button class="app-btn" data-app="phonepe">📱 PhonePe</button>
-                <button class="app-btn" data-app="gpay">🔵 Google Pay</button>
-                <button class="app-btn" data-app="paytm">🔷 Paytm</button>
+                <button class="app-btn active" data-app="auto" id="appAuto">Auto-detect</button>
+                <button class="app-btn" data-app="phonepe" id="appPhonePe">📱 PhonePe</button>
+                <button class="app-btn" data-app="gpay" id="appGPay">🔵 Google Pay</button>
+                <button class="app-btn" data-app="paytm" id="appPaytm">🔷 Paytm</button>
               </div>
               <div class="dropzone" id="csvDropzone" tabindex="0">
                 <span class="drop-icon">📄</span>
@@ -1131,7 +1131,7 @@ details > div{padding-top:12px;}
     <div id="duesNudgeBanner" style="display:none;margin:0 0 22px 0;padding:14px 18px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.05));border:1px solid rgba(251,191,36,.35);border-radius:var(--radius);display:flex;align-items:flex-start;gap:12px;">
       <span style="font-size:1.4rem;line-height:1;">☀️</span>
       <div style="flex:1">
-        <div style="font-size:.78rem;font-weight:700;color:rgba(251,191,36,.9);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;">Outstanding Dues</div>
+        <div id="duesLabel" style="font-size:.78rem;font-weight:700;color:rgba(251,191,36,.9);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;">Outstanding Dues</div>
         <div id="duesNudgeText" style="font-size:.9rem;color:var(--text-1);line-height:1.55;"></div>
       </div>
       <button onclick="document.getElementById('duesNudgeBanner').style.display='none'" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:1.1rem;line-height:1;padding:0;">×</button>
@@ -1139,21 +1139,21 @@ details > div{padding-top:12px;}
 
     <!-- ══════════ INVENTORY CONTROL ══════════ -->
     <section class="search-section" id="inventorySection">
-      <h2>📦 Inventory Control Centre</h2>
-      <p class="sub">Track your stock in real time. Every sale or purchase auto-updates quantities. Add manual cash transactions when UPI isn't used.</p>
+      <h2 id="inventorySectionTitle">📦 Inventory Control Centre</h2>
+      <p class="sub" id="inventorySectionSub">Track your stock in real time. Every sale or purchase auto-updates quantities. Add manual cash transactions when UPI isn't used.</p>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;">
 
         <!-- Stock List -->
         <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
-          <h3>📋 Current Stock</h3>
+          <h3 id="currentStockLabel">📋 Current Stock</h3>
           <div id="inventoryList" style="margin-bottom:14px;max-height:280px;overflow-y:auto;">
             <div class="loading-shimmer" style="height:40px;border-radius:8px;"></div>
           </div>
 
           <!-- Add / Edit Stock Form -->
           <details style="margin-top:8px;">
-            <summary style="cursor:pointer;font-size:.85rem;font-weight:600;color:var(--teal);user-select:none;">＋ Add / Edit Item</summary>
+            <summary id="addEditStockSummary" style="cursor:pointer;font-size:.85rem;font-weight:600;color:var(--teal);user-select:none;">＋ Add / Edit Item</summary>
             <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
               <input id="invItemName" class="input-field" placeholder="Item name (e.g. Basmati Rice)" style="width:100%;box-sizing:border-box;">
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
@@ -1168,8 +1168,8 @@ details > div{padding-top:12px;}
 
         <!-- Manual Cash Transaction -->
         <div class="connect-card" style="border-color:rgba(75,142,247,.2);">
-          <h3>💵 Record Cash Transaction</h3>
-          <p class="sub-note">No UPI? Log it manually here. Updates stock and ledger instantly.</p>
+          <h3 id="recordCashTitle">💵 Record Cash Transaction</h3>
+          <p class="sub-note" id="recordCashSub">No UPI? Log it manually here. Updates stock and ledger instantly.</p>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <select id="manualItem" class="input-field" style="width:100%;box-sizing:border-box;">
               <option value="">— Select item —</option>
@@ -1179,11 +1179,11 @@ details > div{padding-top:12px;}
               <input id="manualPrice" class="input-field" type="number" min="0" step="0.01" placeholder="Price/unit ₹">
             </div>
             <div style="display:flex;gap:8px;">
-              <button id="dirSaleBtn" onclick="setManualDir('inflow',this)" class="btn" style="flex:1;background:rgba(45,212,191,.15);border:1px solid var(--teal);color:var(--teal);">📤 Sale</button>
-              <button id="dirBuyBtn" onclick="setManualDir('outflow',this)" class="btn" style="flex:1;background:transparent;border:1px solid var(--border);">📥 Purchase</button>
+              <button id="dirSaleBtn" onclick="setManualDir('inflow',this)" class="btn" style="flex:1;background:rgba(45,212,191,.15);border:1px solid var(--teal);color:var(--teal);"><span id="inventorySaleBtnLabel">📤 Sale</span></button>
+              <button id="dirBuyBtn" onclick="setManualDir('outflow',this)" class="btn" style="flex:1;background:transparent;border:1px solid var(--border);"><span id="inventoryBuyBtnLabel">📥 Purchase</span></button>
             </div>
             <input id="manualNote" class="input-field" placeholder="Note (optional)">
-            <button class="btn" onclick="submitManualCash()" style="width:100%;">Record & Update Stock</button>
+            <button class="btn" onclick="submitManualCash()" style="width:100%;" id="recordUpdateBtnLabel">Record & Update Stock</button>
             <div id="manualResult" style="font-size:.8rem;color:var(--teal);display:none;"></div>
           </div>
         </div>
@@ -1194,12 +1194,12 @@ details > div{padding-top:12px;}
     <section class="search-section" id="aiIntelSection">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
         <div>
-          <h2>🧠 AI Decision Intelligence</h2>
-          <p class="sub" style="margin-top:4px;">10 AI modules analysing your business: pricing, demand, suppliers, promotions, bundles &amp; profit leakage — all in one place.</p>
+          <h2 id="aiIntelSectionTitle">🧠 AI Decision Intelligence</h2>
+          <p class="sub" style="margin-top:4px;" id="aiIntelSectionSub">10 AI modules analysing your business: pricing, demand, suppliers, promotions, bundles &amp; profit leakage — all in one place.</p>
         </div>
         <button class="btn" id="insightsRefreshBtn" onclick="loadInsights()" style="padding:8px 18px;flex-shrink:0;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          Generate Insights
+          <span id="insightsRefreshBtnLabel">Generate Insights</span>
         </button>
       </div>
 
@@ -1238,20 +1238,20 @@ details > div{padding-top:12px;}
 
           <!-- Priority Actions -->
           <div class="connect-card" style="border-color:rgba(75,142,247,.2);">
-            <h3 style="margin-bottom:14px;">🎯 Priority Actions</h3>
+            <h3 id="priorityActionsTitle" style="margin-bottom:14px;">🎯 Priority Actions</h3>
             <div id="priorityActionsList"><div style="color:var(--text-3);font-size:.82rem;">Click Generate Insights to load…</div></div>
           </div>
 
           <!-- Quick Q&A (AI Copilot) -->
           <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
-            <h3 style="margin-bottom:8px;">💬 Ask Copilot</h3>
-            <p class="sub-note" style="margin-bottom:10px;">Ask why profits dropped, what-if simulations, supplier comparisons…</p>
+            <h3 id="askCopilotTitle" style="margin-bottom:8px;">💬 Ask Copilot</h3>
+            <p class="sub-note" id="askCopilotSubEl" style="margin-bottom:10px;">Ask why profits dropped, what-if simulations, supplier comparisons…</p>
             <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-              <button class="app-btn" onclick="copilotQ('Why did my profit decrease?')">Why profit dropped?</button>
-              <button class="app-btn" onclick="copilotQ('Which supplier increased prices?')">Supplier price hike?</button>
-              <button class="app-btn" onclick="copilotQ('What if I increase rice price by ₹5?')">What-if: Rice +₹5?</button>
-              <button class="app-btn" onclick="copilotQ('Which products are making the highest profit?')">Top profit items?</button>
-              <button class="app-btn" onclick="copilotQ('Which customer has the highest outstanding credit?')">Biggest debtor?</button>
+              <button id="copilotQProfit" class="app-btn" onclick="copilotQ(this.textContent)">Why profit dropped?</button>
+              <button id="copilotQSupplier" class="app-btn" onclick="copilotQ(this.textContent)">Supplier price hike?</button>
+              <button id="copilotQWhatIf" class="app-btn" onclick="copilotQ(this.textContent)">What-if: Rice +₹5?</button>
+              <button id="copilotQTopItems" class="app-btn" onclick="copilotQ(this.textContent)">Top profit items?</button>
+              <button id="copilotQDebtor" class="app-btn" onclick="copilotQ(this.textContent)">Biggest debtor?</button>
             </div>
             <div style="display:flex;gap:8px;">
               <input id="copilotInput" class="input-field" placeholder="Ask anything about your business…" style="flex:1;" onkeydown="if(event.key==='Enter')askCopilot()">
@@ -1263,7 +1263,7 @@ details > div{padding-top:12px;}
 
         <!-- Root Causes -->
         <div class="connect-card" style="border-color:rgba(167,139,250,.2);margin-top:16px;">
-          <h3 style="margin-bottom:12px;">🔍 Root Cause Analysis</h3>
+          <h3 id="rootCauseTitle" style="margin-bottom:12px;">🔍 Root Cause Analysis</h3>
           <div id="rootCausesList" style="display:flex;flex-wrap:wrap;gap:8px;">
             <div style="color:var(--text-3);font-size:.82rem;">Loading analysis…</div>
           </div>
@@ -1276,15 +1276,15 @@ details > div{padding-top:12px;}
 
           <!-- Pricing Optimizer -->
           <div class="connect-card" style="border-color:rgba(75,142,247,.2);">
-            <h3 style="margin-bottom:14px;">💰 AI Pricing Optimizer</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Recommended selling prices based on cost, demand &amp; margins. Click Apply to update inventory.</p>
+            <h3 id="pricingCardTitle" style="margin-bottom:14px;">💰 AI Pricing Optimizer</h3>
+            <p class="sub-note" id="pricingCardSub" style="margin-bottom:12px;">Recommended selling prices based on cost, demand &amp; margins. Click Apply to update inventory.</p>
             <div id="pricingList"><div style="color:var(--text-3);font-size:.82rem;">Loading pricing recommendations…</div></div>
           </div>
 
           <!-- Demand Forecast -->
           <div class="connect-card" style="border-color:rgba(245,158,11,.2);">
-            <h3 style="margin-bottom:14px;">📈 Demand Forecast</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Stock levels vs. predicted demand. High urgency items need reorder now.</p>
+            <h3 id="demandCardTitle" style="margin-bottom:14px;">📈 Demand Forecast</h3>
+            <p class="sub-note" id="demandCardSub">Stock levels vs. predicted demand. High urgency items need reorder now.</p>
             <div id="demandList"><div style="color:var(--text-3);font-size:.82rem;">Loading demand data…</div></div>
           </div>
         </div>
@@ -1296,15 +1296,15 @@ details > div{padding-top:12px;}
 
           <!-- Purchase Recommendations -->
           <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
-            <h3 style="margin-bottom:14px;">🛒 Purchase Optimizer</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Optimal buying strategy: what to buy, from whom, how much, and when.</p>
+            <h3 id="purchaseCardTitle" style="margin-bottom:14px;">🛒 Purchase Optimizer</h3>
+            <p class="sub-note" id="purchaseCardSub" style="margin-bottom:12px;">Optimal buying strategy: what to buy, from whom, how much, and when.</p>
             <div id="purchaseList"><div style="color:var(--text-3);font-size:.82rem;">Loading purchase recommendations…</div></div>
           </div>
 
           <!-- Supplier Intelligence -->
           <div class="connect-card" style="border-color:rgba(167,139,250,.2);">
-            <h3 style="margin-bottom:14px;">🚚 Supplier Intelligence</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Reliability and price stability scores for each supplier. Based on your purchase history.</p>
+            <h3 id="supplierCardTitle" style="margin-bottom:14px;">🚚 Supplier Intelligence</h3>
+            <p class="sub-note" id="supplierCardSub" style="margin-bottom:12px;">Reliability and price stability scores for each supplier. Based on your purchase history.</p>
             <div id="supplierList"><div style="color:var(--text-3);font-size:.82rem;">Loading supplier data…</div></div>
           </div>
         </div>
@@ -1316,15 +1316,15 @@ details > div{padding-top:12px;}
 
           <!-- Promotions -->
           <div class="connect-card" style="border-color:rgba(245,158,11,.2);">
-            <h3 style="margin-bottom:14px;">🎯 AI Promotion Advisor</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Campaigns that maximise revenue while protecting margins.</p>
+            <h3 id="promoCardTitle" style="margin-bottom:14px;">🎯 AI Promotion Advisor</h3>
+            <p class="sub-note" id="promoCardSub" style="margin-bottom:12px;">Campaigns that maximise revenue while protecting margins.</p>
             <div id="promotionList" class="insight-grid" style="grid-template-columns:1fr;"></div>
           </div>
 
           <!-- Smart Bundles -->
           <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
-            <h3 style="margin-bottom:14px;">🛍 Smart Bundle Recommendation</h3>
-            <p class="sub-note" style="margin-bottom:12px;">Products frequently bought together — bundle them to increase average basket value.</p>
+            <h3 id="bundleCardTitle" style="margin-bottom:14px;">🛍 Smart Bundle Recommendation</h3>
+            <p class="sub-note" id="bundleCardSub" style="margin-bottom:12px;">Products frequently bought together — bundle them to increase average basket value.</p>
             <div id="bundleList"></div>
           </div>
         </div>
@@ -1335,11 +1335,11 @@ details > div{padding-top:12px;}
         <div id="leakageTotal" class="leakage-total" style="display:none;"></div>
         <div style="display:grid;grid-template-columns:3fr 2fr;gap:18px;align-items:start;">
           <div class="connect-card" style="border-color:rgba(244,63,94,.2);">
-            <h3 style="margin-bottom:14px;">📉 Leakage Breakdown</h3>
+            <h3 id="leakageBreakdownTitle" style="margin-bottom:14px;">📉 Leakage Breakdown</h3>
             <div id="leakageList"><div style="color:var(--text-3);font-size:.82rem;">Loading leakage analysis…</div></div>
           </div>
           <div class="connect-card" style="border-color:rgba(34,197,94,.2);">
-            <h3 style="margin-bottom:14px;">✅ Recovery Actions</h3>
+            <h3 id="recoveryActionsTitle" style="margin-bottom:14px;">✅ Recovery Actions</h3>
             <div id="recoveryActionsList"><div style="color:var(--text-3);font-size:.82rem;">Loading recovery actions…</div></div>
           </div>
         </div>
@@ -1349,17 +1349,17 @@ details > div{padding-top:12px;}
 
     <!-- ══════════ AI ACCOUNTANT CHAT ══════════ -->
     <section class="search-section" id="aiChatSection">
-      <h2>🤖 Ask Your AI Accountant</h2>
-      <p class="sub">Ask anything about your business in plain language. "Which supplier do I owe the most?" — it reasons over your real ledger data.</p>
+      <h2 id="aiChatSectionTitle">🤖 Ask Your AI Accountant</h2>
+      <p class="sub" id="aiChatSectionSub">Ask anything about your business in plain language. "Which supplier do I owe the most?" — it reasons over your real ledger data.</p>
       <div style="display:flex;gap:10px;margin-bottom:12px;">
         <input id="chatQuestion" class="input-field" placeholder="e.g. Am I spending more on rice or dal this month?" style="flex:1;" onkeydown="if(event.key==='Enter')askLedgerChat()">
-        <button class="btn" onclick="askLedgerChat()" id="chatBtn">Ask</button>
+        <button class="btn" onclick="askLedgerChat()" id="chatAskBtn">Ask</button>
       </div>
       <div id="chatSuggestions" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-        <button class="app-btn" onclick="setQuestion('Who owes me the most money?')">Who owes me most?</button>
-        <button class="app-btn" onclick="setQuestion('What is my net profit this month?')">Profit this month?</button>
-        <button class="app-btn" onclick="setQuestion('Where am I spending the most?')">Biggest expenses?</button>
-        <button class="app-btn" onclick="setQuestion('Which supplier do I owe the most?')">Supplier owed most?</button>
+        <button id="chatQ1" class="app-btn" onclick="setQuestion(this.textContent)">Who owes me most?</button>
+        <button id="chatQ2" class="app-btn" onclick="setQuestion(this.textContent)">Profit this month?</button>
+        <button id="chatQ3" class="app-btn" onclick="setQuestion(this.textContent)">Biggest expenses?</button>
+        <button id="chatQ4" class="app-btn" onclick="setQuestion(this.textContent)">Supplier owed most?</button>
       </div>
       <div id="chatAnswer" style="display:none;padding:18px;background:var(--surface-2);border-radius:var(--radius);border:1px solid var(--border);font-size:.92rem;line-height:1.7;color:var(--text-1);">
         <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">AI Accountant</div>
@@ -1369,26 +1369,26 @@ details > div{padding-top:12px;}
 
     <!-- ══════════ MONTHLY NARRATIVE + CATEGORY BREAKDOWN ══════════ -->
     <section class="search-section" id="narrativeSection">
-      <h2>📊 Monthly Business Summary</h2>
-      <p class="sub">Your AI accountant's take on this month's numbers — in plain English, not spreadsheet jargon.</p>
+      <h2 id="narrativeSectionTitle">📊 Monthly Business Summary</h2>
+      <p class="sub" id="narrativeSectionSub">Your AI accountant's take on this month's numbers — in plain language, not spreadsheet jargon.</p>
       <div style="display:grid;grid-template-columns:3fr 2fr;gap:18px;align-items:start;">
 
         <!-- Narrative card -->
         <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <h3 style="margin:0;">📝 Accountant's Note</h3>
-            <button class="btn" onclick="loadNarrative()" style="padding:4px 12px;font-size:.78rem;">Refresh</button>
+            <h3 id="accountantsNoteTitle" style="margin:0;">📝 Accountant's Note</h3>
+            <button class="btn" id="narrativeRefreshBtn" onclick="loadNarrative()" style="padding:4px 12px;font-size:.78rem;">Refresh</button>
           </div>
           <div id="narrativeText" style="font-size:.9rem;line-height:1.75;color:var(--text-2);font-style:italic;">
-            Click Refresh to generate your monthly narrative…
+            <span id="narrativePlaceholder">Click Refresh to generate your monthly narrative…</span>
           </div>
         </div>
 
         <!-- Category pie chart -->
         <div class="connect-card" style="border-color:rgba(75,142,247,.2);">
-          <h3>🗂️ Expense Breakdown</h3>
+          <h3 id="expenseBreakdownTitle">🗂️ Expense Breakdown</h3>
           <div id="categoryChart" style="min-height:160px;display:flex;flex-direction:column;gap:6px;">
-            <div style="color:var(--text-3);font-size:.82rem;">No expense data yet.</div>
+            <div id="noExpenseData" style="color:var(--text-3);font-size:.82rem;">No expense data yet.</div>
           </div>
         </div>
       </div>
@@ -1396,36 +1396,36 @@ details > div{padding-top:12px;}
 
     <!-- ══════════ DAILY CLOSE + CSV EXPORT ══════════ -->
     <section class="search-section" id="closeSection">
-      <h2>🔒 Day Close &amp; Export</h2>
-      <p class="sub">Lock in today's position with one tap. Export your ledger as a clean CSV for your accountant.</p>
+      <h2 id="dayCloseSectionTitle">🔒 Day Close &amp; Export</h2>
+      <p class="sub" id="dayCloseSectionSub">Lock in today's position with one tap. Export your ledger as a clean CSV for your accountant.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;">
 
         <!-- Close Day -->
         <div class="connect-card" style="border-color:rgba(251,191,36,.2);">
-          <h3>📅 Close Today</h3>
+          <h3 id="closeTodayCardTitle">📅 Close Today</h3>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:.85rem;color:var(--text-2);">Cash on Hand:</span>
+              <span id="cashOnHandLabel" style="font-size:.85rem;color:var(--text-2);">Cash on Hand:</span>
               <input id="closeCash" class="input-field" type="number" min="0" step="0.01" placeholder="₹ 0.00" style="flex:1;">
             </div>
             <input id="closeNote" class="input-field" placeholder="Note (optional)">
-            <button class="btn" onclick="closeDay()" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.5);color:#FBB924;">🔒 Lock Today's Snapshot</button>
+            <button class="btn" onclick="closeDay()" id="lockSnapshotBtn" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.5);color:#FBB924;">🔒 Lock Today's Snapshot</button>
             <div id="closeResult" style="display:none;font-size:.8rem;color:var(--teal);"></div>
           </div>
 
           <div style="margin-top:16px;">
-            <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;">Recent Snapshots</div>
+            <div id="recentSnapshotsLabel" style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;">Recent Snapshots</div>
             <div id="snapshotList" style="max-height:150px;overflow-y:auto;font-size:.8rem;"></div>
           </div>
         </div>
 
         <!-- CSV Export -->
         <div class="connect-card" style="border-color:rgba(45,212,191,.2);">
-          <h3>📤 Export Ledger</h3>
-          <p class="sub-note">Download a clean CSV of all confirmed transactions — ready for your accountant or tax prep.</p>
+          <h3 id="exportLedgerCardTitle">📤 Export Ledger</h3>
+          <p class="sub-note" id="exportLedgerCardSub">Download a clean CSV of all confirmed transactions — ready for your accountant or tax prep.</p>
           <div style="display:flex;flex-direction:column;gap:10px;">
-            <button class="btn" onclick="exportCSV()" style="width:100%;">⬇️ Download This Month's CSV</button>
-            <button class="btn" onclick="exportCSV('all')" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text-2);">⬇️ Download All-Time CSV</button>
+            <button class="btn" onclick="exportCSV()" id="downloadMonthBtn" style="width:100%;">⬇️ Download This Month's CSV</button>
+            <button class="btn" onclick="exportCSV('all')" id="downloadAllBtn" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text-2);">⬇️ Download All-Time CSV</button>
           </div>
         </div>
       </div>
@@ -1481,6 +1481,78 @@ const S = {
     modalTitle:"New Month, New Ledger?",
     modalSub:"A new month has started:",
     modalStartNew:"Start New Ledger",modalContinue:"Continue Previous",
+    // Inventory
+    inventoryTitle:"Inventory Control Centre",
+    inventorySub:"Track your stock in real time. Every sale or purchase auto-updates quantities. Add manual cash transactions when UPI isn't used.",
+    currentStock:"Current Stock",recordCash:"Record Cash Transaction",
+    recordCashSub:"No UPI? Log it manually here. Updates stock and ledger instantly.",
+    selectItem:"— Select Item —",quantity:"Quantity",pricePerUnit:"Price/unit ₹",
+    saleBtn:"Sale",purchaseBtn:"Purchase",noteOptional:"Note (optional)",
+    recordUpdateBtn:"Record & Update Stock",addEditItem:"+ Add / Edit Item",
+    // Monthly Narrative & AI Chat & etc.
+    narrativeSectionTitle:"📊 Monthly Business Summary",
+    narrativeSectionSub:"Your AI accountant's take on this month's numbers — in plain language, not spreadsheet jargon.",
+    accountantsNote:"📝 Accountant's Note",narrativeRefresh:"Refresh",
+    narrativePlaceholder:"Click Refresh to generate your monthly narrative…",
+    expenseBreakdown:"🗂️ Expense Breakdown",noExpenseData:"No expense data yet.",
+    chatQ1:"Who owes me most?",chatQ2:"Profit this month?",chatQ3:"Biggest expenses?",chatQ4:"Supplier owed most?",
+    chatPlaceholder:"e.g. Am I spending more on rice or dal this month?",
+    chatAsk:"Ask",
+    reliabilityLabel:"Reliability",priceStabilityLabel:"Price Stability",
+    ordersLabel:"orders",totalLabel:"Total:",
+    noPriorityActions:"No priority actions — your business looks healthy!",
+    noNegativeTrends:"No negative trends detected.",
+    noPricingData:"No pricing optimizations yet. Add inventory and sales data.",
+    noDemandData:"No demand data yet.",
+    noPurchaseData:"No purchase recommendations yet.",
+    noSupplierData:"No supplier history yet. Record purchases to see scores.",
+    noPromoData:"No promotion recommendations yet.",
+    noBundleData:"No bundle suggestions yet.",
+    noLeakageData:"✅ No significant leakage detected. Business looks tight!",
+    noRecoveryData:"Nothing urgent right now.",
+    copilotThinking:"Thinking…",copilotError:"Error contacting AI. Please try again.",
+    copilotModeWhatIf:"🔮 What-If Simulation",copilotModeRootCause:"🔍 Root Cause Analysis",copilotModeStandard:"💬 AI Copilot",
+    // AI Intelligence
+    aiIntelTitle:"AI Decision Intelligence",
+    aiIntelSub:"10 AI modules analysing your business: pricing, demand, suppliers, promotions, bundles & profit leakage — all in one place.",
+    generateInsights:"Generate Insights",
+    tabCopilot:"🤖 Copilot",tabPricing:"💰 Pricing & Demand",tabSupply:"🛒 Purchase & Suppliers",
+    tabPromo:"🎯 Promotions & Bundles",tabLeakage:"📉 Profit Leakage",
+    priorityActions:"🎯 Priority Actions",askCopilot:"💬 Ask Copilot",
+    askCopilotSub:"Ask why profits dropped, what-if simulations, supplier comparisons…",
+    copilotPlaceholder:"Ask anything about your business…",askBtn:"Ask",
+    qWhyProfit:"Why profit dropped?",qSupplier:"Supplier price hike?",qWhatIf:"What-if: Rice +₹5?",
+    qTopItems:"Top profit items?",qDebtor:"Biggest debtor?",
+    rootCauseTitle:"🔍 Root Cause Analysis",
+    pricingTitle:"💰 AI Pricing Optimizer",
+    pricingSub:"Recommended selling prices based on cost, demand & margins. Click Apply to update inventory.",
+    demandTitle:"📈 Demand Forecast",
+    demandSub:"Stock levels vs. predicted demand. High urgency items need reorder now.",
+    purchaseTitle:"🛒 Purchase Optimizer",
+    purchaseSub:"Optimal buying strategy: what to buy, from whom, how much, and when.",
+    supplierTitle:"🚚 Supplier Intelligence",
+    supplierSub:"Reliability and price stability scores for each supplier. Based on your purchase history.",
+    promoTitle:"🎯 AI Promotion Advisor",promoSub:"Campaigns that maximise revenue while protecting margins.",
+    bundleTitle:"🛍 Smart Bundle Recommendation",bundleSub:"Products frequently bought together — bundle them to increase average basket value.",
+    leakageBreakdown:"📉 Leakage Breakdown",recoveryActions:"✅ Recovery Actions",
+    applyLabel:"Apply",appliedLabel:"✓ Applied",
+    stockLabel:"Stock:",daysLeft:"days left",reorderLabel:"Reorder:",
+    lowUrgency:"low urgency",mediumUrgency:"medium urgency",highUrgency:"high urgency",
+    coverageLabel:"Coverage:",days:"days",
+    discountLabel:"Discount",basketLift:"Basket Lift",expectedLift:"Expected Lift",
+    estimatedLeakage:"Estimated Monthly Profit Leakage",
+    healthGood:"Business Health: Good",healthWarning:"Business Health: Needs Attention",healthCritical:"Business Health: Critical",
+    noDataYet:"No data yet",noDataSub:"Add products to inventory and record transactions, then click Generate Insights.",
+    // Day close
+    dayCloseTitle:"🔒 Day Close & Export",dayCloseSub:"Lock in today's position with one tap. Export your ledger as a clean CSV for your accountant.",
+    closeTodayTitle:"📅 Close Today",cashOnHand:"Cash on Hand:",closeNote:"Note (optional)",lockSnapshot:"🔒 Lock Today's Snapshot",
+    recentSnapshots:"Recent Snapshots",exportLedgerTitle:"📤 Export Ledger",
+    exportLedgerSub:"Download a clean CSV of all confirmed transactions — ready for your accountant or tax prep.",
+    downloadMonth:"⬇️ Download This Month's CSV",downloadAll:"⬇️ Download All-Time CSV",
+    // AI Chat section
+    aiChatTitle:"🤖 Ask Your AI Accountant",
+    aiChatSub:"Ask anything about your business in plain language. &quot;Which supplier do I owe the most?&quot; — it reasons over your real ledger data.",
+    copilotMode_what_if:"🔮 What-If Simulation",copilotMode_root_cause:"🔍 Root Cause Analysis",copilotMode_standard:"💬 AI Copilot",
   },
   hindi:{
     heroTitle:`एक पास. <span>दो आउटपुट.</span>`,
@@ -1513,6 +1585,77 @@ const S = {
     trustScore:"विश्वास",newMonthBtn:"+ नया महीना",syncLabel:"🔌 ऑटो-UPI सिंक",
     modalTitle:"नया महीना, नया लेजर?",modalSub:"नया महीना शुरू हुआ:",
     modalStartNew:"नया लेजर शुरू करें",modalContinue:"पिछला जारी रखें",
+    // Inventory
+    inventoryTitle:"इन्वेंटरी नियंत्रण केंद्र",
+    inventorySub:"अपने स्टॉक को रियल-टाइम में ट्रैक करें। हर बिक्री या खरीद से मात्रा स्वतः अपडेट होती है।",
+    currentStock:"वर्तमान स्टॉक",recordCash:"नकद लेनदेन दर्ज करें",
+    recordCashSub:"UPI नहीं? यहाँ मैन्युअल रूप से दर्ज करें। स्टॉक और लेजर तुरंत अपडेट होगा।",
+    selectItem:"— वस्तु चुनें —",quantity:"मात्रा",pricePerUnit:"कीमत/इकाई ₹",
+    saleBtn:"बिक्री",purchaseBtn:"खरीद",noteOptional:"नोट (वैकल्पिक)",
+    recordUpdateBtn:"रिकॉर्ड करें और स्टॉक अपडेट करें",addEditItem:"+ वस्तु जोड़ें / संपादित करें",
+    narrativeSectionTitle:"📊 मासिक व्यापार सारांश",
+    narrativeSectionSub:"आपके AI लेखाकार का इस महीने के आंकड़ों पर विश्लेषण।",
+    accountantsNote:"📝 लेखाकार की टिप्पणी",narrativeRefresh:"नवीनीकरण",
+    narrativePlaceholder:"नवीनीकरण दबाएं — मासिक विवरण तैयार होगा…",
+    expenseBreakdown:"🖼 खर्च विवरण",noExpenseData:"अभी कोई खर्च डेटा नहीं।",
+    chatQ1:"क़र्ज़दार कौन है?",chatQ2:"इस महीने लाभ?",chatQ3:"सबसे बड़ा खर्च?",chatQ4:"आपूर्तिकर्ता का कर्ज?",
+    chatPlaceholder:"उदा. इस महीने चावल या दाल पर कितना खर्च हुआ?",
+    chatAsk:"पूछें",
+    reliabilityLabel:"विश्वसनीयता",priceStabilityLabel:"मूल्य स्थिरता",
+    ordersLabel:"ऑर्डर",totalLabel:"कुल:",
+    noPriorityActions:"कोई प्राथमिकता क्रिया नहीं — व्यवसाय स्वस्थ दिखता है!",
+    noNegativeTrends:"कोई नकारात्मक रुझान नहीं मिला।",
+    noPricingData:"अभी मूल्य अनुकूलन नहीं। इन्वेंटरी और बिक्री डेटा जोड़ें।",
+    noDemandData:"अभी मांग डेटा नहीं।",
+    noPurchaseData:"अभी खरीद अनुशंसा नहीं।",
+    noSupplierData:"अभी आपूर्तिकर्ता इतिहास नहीं। खरीद दर्ज करें।",
+    noPromoData:"अभी प्रमोशन अनुशंसा नहीं।",
+    noBundleData:"अभी कोई बंडल सुझाव नहीं।",
+    noLeakageData:"✅ कोई महत्वपूर्ण लाभ रिसाव नहीं मिला।",
+    noRecoveryData:"अभी कुछ अत्यवश्यक नहीं।",
+    copilotThinking:"सोच रहा हूँ…",copilotError:"कृपया पुनः प्रयास करें।",
+    copilotModeWhatIf:"🔮 क्या-अगर सिमुलेशन",copilotModeRootCause:"🔍 मूल कारण विश्लेषण",copilotModeStandard:"💬 AI सहायक",
+    // AI Intelligence
+    aiIntelTitle:"AI निर्णय बुद्धिमत्ता",
+    aiIntelSub:"10 AI मॉड्यूल आपके व्यवसाय का विश्लेषण करते हैं: मूल्य निर्धारण, मांग, आपूर्तिकर्ता, प्रमोशन, बंडल और लाभ रिसाव।",
+    generateInsights:"अंतर्दृष्टि उत्पन्न करें",
+    tabCopilot:"🤖 सहायक",tabPricing:"💰 मूल्य और मांग",tabSupply:"🛒 खरीद और आपूर्तिकर्ता",
+    tabPromo:"🎯 प्रमोशन और बंडल",tabLeakage:"📉 लाभ रिसाव",
+    priorityActions:"🎯 प्राथमिकता क्रियाएं",askCopilot:"💬 सहायक से पूछें",
+    askCopilotSub:"पूछें कि लाभ क्यों घटा, 'क्या होगा' सिमुलेशन, आपूर्तिकर्ता तुलना…",
+    copilotPlaceholder:"अपने व्यवसाय के बारे में कुछ भी पूछें…",askBtn:"पूछें",
+    qWhyProfit:"लाभ क्यों घटा?",qSupplier:"आपूर्तिकर्ता मूल्य वृद्धि?",qWhatIf:"क्या होगा: चावल +₹5?",
+    qTopItems:"शीर्ष लाभदायक वस्तुएं?",qDebtor:"सबसे बड़ा देनदार?",
+    rootCauseTitle:"🔍 मूल कारण विश्लेषण",
+    pricingTitle:"💰 AI मूल्य अनुकूलक",
+    pricingSub:"लागत, मांग और मार्जिन के आधार पर अनुशंसित बिक्री मूल्य। अपडेट के लिए 'लागू करें' क्लिक करें।",
+    demandTitle:"📈 मांग पूर्वानुमान",
+    demandSub:"स्टॉक स्तर बनाम अनुमानित मांग। उच्च तत्कालता वाली वस्तुओं का तुरंत पुनः ऑर्डर करें।",
+    purchaseTitle:"🛒 खरीद अनुकूलक",
+    purchaseSub:"इष्टतम खरीद रणनीति: क्या, किससे, कितना और कब खरीदें।",
+    supplierTitle:"🚚 आपूर्तिकर्ता बुद्धिमत्ता",
+    supplierSub:"प्रत्येक आपूर्तिकर्ता की विश्वसनीयता और मूल्य स्थिरता स्कोर। आपके खरीद इतिहास पर आधारित।",
+    promoTitle:"🎯 AI प्रमोशन सलाहकार",promoSub:"अभियान जो राजस्व को अधिकतम करते हैं और मार्जिन की रक्षा करते हैं।",
+    bundleTitle:"🛍 स्मार्ट बंडल अनुशंसा",bundleSub:"अक्सर एक साथ खरीदी जाने वाली वस्तुएं — औसत बास्केट मूल्य बढ़ाने के लिए बंडल करें।",
+    leakageBreakdown:"📉 रिसाव विवरण",recoveryActions:"✅ पुनर्प्राप्ति क्रियाएं",
+    applyLabel:"लागू करें",appliedLabel:"✓ लागू हो गया",
+    stockLabel:"स्टॉक:",daysLeft:"दिन शेष",reorderLabel:"पुनः ऑर्डर:",
+    lowUrgency:"कम तत्कालता",mediumUrgency:"मध्यम तत्कालता",highUrgency:"उच्च तत्कालता",
+    coverageLabel:"कवरेज:",days:"दिन",
+    discountLabel:"छूट",basketLift:"बास्केट वृद्धि",expectedLift:"अपेक्षित वृद्धि",
+    estimatedLeakage:"अनुमानित मासिक लाभ रिसाव",
+    healthGood:"व्यवसाय स्वास्थ्य: अच्छा",healthWarning:"व्यवसाय स्वास्थ्य: ध्यान चाहिए",healthCritical:"व्यवसाय स्वास्थ्य: गंभीर",
+    noDataYet:"अभी तक कोई डेटा नहीं",noDataSub:"इन्वेंटरी में उत्पाद जोड़ें और लेनदेन दर्ज करें, फिर 'अंतर्दृष्टि उत्पन्न करें' पर क्लिक करें।",
+    // Day close
+    dayCloseTitle:"🔒 दिन बंद और निर्यात",dayCloseSub:"एक टैप से आज की स्थिति लॉक करें। अपने लेखाकार के लिए लेजर CSV निर्यात करें।",
+    closeTodayTitle:"📅 आज बंद करें",cashOnHand:"हाथ में नकद:",closeNote:"नोट (वैकल्पिक)",lockSnapshot:"🔒 आज का स्नैपशॉट लॉक करें",
+    recentSnapshots:"हाल के स्नैपशॉट",exportLedgerTitle:"📤 लेजर निर्यात",
+    exportLedgerSub:"सभी पुष्टि किए गए लेनदेन का CSV डाउनलोड करें — आपके लेखाकार के लिए तैयार।",
+    downloadMonth:"⬇️ इस महीने का CSV डाउनलोड करें",downloadAll:"⬇️ सभी समय का CSV डाउनलोड करें",
+    // AI Chat section
+    aiChatTitle:"🤖 अपने AI लेखाकार से पूछें",
+    aiChatSub:"अपने व्यवसाय के बारे में सरल भाषा में कुछ भी पूछें।",
+    copilotMode_what_if:"🔮 क्या-अगर सिमुलेशन",copilotMode_root_cause:"🔍 मूल कारण विश्लेषण",copilotMode_standard:"💬 AI सहायक",
   },
   telugu:{
     heroTitle:`ఒక పాస్. <span>రెండు అవుట్‌పుట్‌లు.</span>`,
@@ -1545,6 +1688,55 @@ const S = {
     trustScore:"విశ్వాసం",newMonthBtn:"+ నూతన నెల",syncLabel:"🔌 ఆటో-UPI సింక్",
     modalTitle:"నూతన నెల, నూతన లెడ్జర్?",modalSub:"కొత్త నెల ప్రారంభమైంది:",
     modalStartNew:"నూతన లెడ్జర్ ప్రారంభించండి",modalContinue:"మునుపటిది కొనసాగించండి",
+    // Inventory
+    inventoryTitle:"ఇన్వెంటరీ నియంత్రణ కేంద్రం",
+    inventorySub:"మీ స్టాక్‌ని రియల్-టైమ్‌లో ట్రాక్ చేయండి. ప్రతి అమ్మకం లేదా కొనుగోలు పరిమాణాలను స్వయంచాలకంగా నవీకరిస్తుంది.",
+    currentStock:"ప్రస్తుత స్టాక్",recordCash:"నగదు లావాదేవీ నమోదు చేయండి",
+    recordCashSub:"UPI లేదా? ఇక్కడ మాన్యువల్‌గా నమోదు చేయండి. స్టాక్ మరియు లెడ్జర్ వెంటనే నవీకరించబడతాయి.",
+    selectItem:"— వస్తువు ఎంచుకోండి —",quantity:"పరిమాణం",pricePerUnit:"ధర/యూనిట్ ₹",
+    saleBtn:"అమ్మకం",purchaseBtn:"కొనుగోలు",noteOptional:"నోట్ (ఐచ్ఛికం)",
+    recordUpdateBtn:"నమోదు చేయండి & స్టాక్ నవీకరించండి",addEditItem:"+ వస్తువు జోడించండి / సవరించండి",
+    // AI Intelligence
+    aiIntelTitle:"AI నిర్ణయ మేధస్సు",
+    aiIntelSub:"10 AI మాడ్యూల్‌లు మీ వ్యాపారాన్ని విశ్లేషిస్తాయి: ధర నిర్ణయం, డిమాండ్, సరఫరాదారులు, ప్రమోషన్‌లు, బండిల్‌లు & లాభ నష్టం.",
+    generateInsights:"అంతర్దృష్టులు రూపొందించు",
+    tabCopilot:"🤖 సహాయకుడు",tabPricing:"💰 ధర & డిమాండ్",tabSupply:"🛒 కొనుగోలు & సరఫరాదారులు",
+    tabPromo:"🎯 ప్రమోషన్‌లు & బండిల్‌లు",tabLeakage:"📉 లాభ నష్టం",
+    priorityActions:"🎯 ప్రాధాన్యత చర్యలు",askCopilot:"💬 సహాయకుణ్ణి అడగండి",
+    askCopilotSub:"లాభం ఎందుకు తగ్గిందో అడగండి, 'ఏమి జరుగుతుందా' సిమ్యులేషన్‌లు, సరఫరాదారు పోలికలు…",
+    copilotPlaceholder:"మీ వ్యాపారం గురించి ఏదైనా అడగండి…",askBtn:"అడగండి",
+    qWhyProfit:"లాభం ఎందుకు తగ్గింది?",qSupplier:"సరఫరాదారు ధర పెరుగుదల?",qWhatIf:"ఏమి జరుగుతుందా: వరి +₹5?",
+    qTopItems:"అగ్ర లాభదాయక వస్తువులు?",qDebtor:"అతిపెద్ద రుణగ్రహీత?",
+    rootCauseTitle:"🔍 మూల కారణ విశ్లేషణ",
+    pricingTitle:"💰 AI ధర అనుకూలీకరణ",
+    pricingSub:"వ్యయం, డిమాండ్ & మార్జిన్‌ల ఆధారంగా సిఫార్సు చేయబడిన విక్రయ ధరలు. నవీకరించడానికి 'వర్తించు' క్లిక్ చేయండి.",
+    demandTitle:"📈 డిమాండ్ సూచన",
+    demandSub:"స్టాక్ స్థాయులు vs. అంచనా వేసిన డిమాండ్. అధిక అత్యవసర వస్తువులను వెంటనే పునః ఆర్డర్ చేయండి.",
+    purchaseTitle:"🛒 కొనుగోలు అనుకూలీకరణ",
+    purchaseSub:"సరైన కొనుగోలు వ్యూహం: ఏమి కొనాలి, ఎవరి నుండి, ఎంత మరియు ఎప్పుడు.",
+    supplierTitle:"🚚 సరఫరాదారు మేధస్సు",
+    supplierSub:"ప్రతి సరఫరాదారు యొక్క విశ్వసనీయత మరియు ధర స్థిరత్వ స్కోర్‌లు. మీ కొనుగోలు చరిత్ర ఆధారంగా.",
+    promoTitle:"🎯 AI ప్రమోషన్ సలహాదారు",promoSub:"మార్జిన్‌లను రక్షిస్తూ ఆదాయాన్ని పెంచే ప్రచారాలు.",
+    bundleTitle:"🛍 స్మార్ట్ బండిల్ సిఫార్సు",bundleSub:"తరచుగా కలిసి కొనే వస్తువులు — సగటు బుట్ట విలువను పెంచడానికి వాటిని బండిల్ చేయండి.",
+    leakageBreakdown:"📉 నష్టం వివరణ",recoveryActions:"✅ పునరుద్ధరణ చర్యలు",
+    applyLabel:"వర్తించు",appliedLabel:"✓ వర్తించింది",
+    stockLabel:"స్టాక్:",daysLeft:"రోజులు మిగిలాయి",reorderLabel:"పునః ఆర్డర్:",
+    lowUrgency:"తక్కువ అత్యవసరం",mediumUrgency:"మధ్యస్థ అత్యవసరం",highUrgency:"అధిక అత్యవసరం",
+    coverageLabel:"కవరేజ్:",days:"రోజులు",
+    discountLabel:"తగ్గింపు",basketLift:"బుట్ట పెరుగుదల",expectedLift:"అంచనా పెరుగుదల",
+    estimatedLeakage:"అంచనా నెలవారీ లాభ నష్టం",
+    healthGood:"వ్యాపార ఆరోగ్యం: మంచిది",healthWarning:"వ్యాపార ఆరోగ్యం: శ్రద్ధ అవసరం",healthCritical:"వ్యాపార ఆరోగ్యం: విమర్శాత్మకం",
+    noDataYet:"ఇంకా డేటా లేదు",noDataSub:"ఇన్వెంటరీలో ఉత్పత్తులు జోడించండి మరియు లావాదేవీలు నమోదు చేయండి, ఆపై 'అంతర్దృష్టులు రూపొందించు' క్లిక్ చేయండి.",
+    // Day close
+    dayCloseTitle:"🔒 రోజు మూసివేత & ఎగుమతి",dayCloseSub:"ఒక ట్యాప్‌తో నేటి స్థానాన్ని లాక్ చేయండి. మీ అకౌంటెంట్ కోసం లెడ్జర్ CSV ఎగుమతి చేయండి.",
+    closeTodayTitle:"📅 నేడు మూసివేయండి",cashOnHand:"చేతిలో నగదు:",closeNote:"నోట్ (ఐచ్ఛికం)",lockSnapshot:"🔒 నేటి స్నాప్‌షాట్ లాక్ చేయండి",
+    recentSnapshots:"ఇటీవలి స్నాప్‌షాట్‌లు",exportLedgerTitle:"📤 లెడ్జర్ ఎగుమతి",
+    exportLedgerSub:"అన్ని నిర్ధారించిన లావాదేవీల CSV డౌన్‌లోడ్ చేయండి — మీ అకౌంటెంట్ కోసం సిద్ధంగా ఉంది.",
+    downloadMonth:"⬇️ ఈ నెల CSV డౌన్‌లోడ్ చేయండి",downloadAll:"⬇️ సర్వకాలిక CSV డౌన్‌లోడ్ చేయండి",
+    // AI Chat section
+    aiChatTitle:"🤖 మీ AI అకౌంటెంట్‌ను అడగండి",
+    aiChatSub:"మీ వ్యాపారం గురించి సాధారణ భాషలో ఏదైనా అడగండి.",
+    copilotMode_what_if:"🔮 ఏమి జరుగుతుందా సిమ్యులేషన్",copilotMode_root_cause:"🔍 మూల కారణ విశ్లేషణ",copilotMode_standard:"💬 AI సహాయకుడు",
   },
 };
 
@@ -1622,21 +1814,20 @@ function applyStrings(){
   setText("tabImageBtn", t.tabImage);
   setText("tabVoiceBtn", t.tabVoice);
   setPlace("textInput", t.textPlaceholder);
-  
+
   if(!selectedImageFile) setText("imageDropLabel", t.imageDropLabel);
   if(!selectedVoiceFile) setText("voiceDropLabel", t.voiceDropLabel);
-  
+
   setText("submitBtn", t.submit);
   setText("chartTitle", t.chartTitle);
   setText("exportLabel", t.exportLabel);
   setText("exportBtn", t.exportBtn);
-  
-  // These may not exist if search is removed
+
   setText("searchTitle", t.searchTitle);
   setText("searchSub", t.searchSub);
   setPlace("searchInput", t.searchPlaceholder);
   setText("searchBtn", t.searchBtn);
-  
+
   setText("footerNote", t.footerNote);
   setText("statLabelMessages", t.statLabelMessages);
   setText("statSubMessages", t.statSubMessages);
@@ -1654,6 +1845,93 @@ function applyStrings(){
   setText("dashContactsBtn", t.dashContacts);
   setText("syncLabel", t.syncLabel);
   setText("newMonthBtn", t.newMonthBtn);
+
+  // ── Inventory ───────────────────────────────────────────
+  setText("inventorySectionTitle", t.inventoryTitle);
+  setText("inventorySectionSub",   t.inventorySub);
+  setText("currentStockLabel",     t.currentStock);
+  setText("recordCashTitle",       t.recordCash);
+  setText("recordCashSub",         t.recordCashSub);
+  setText("inventorySaleBtnLabel", t.saleBtn);
+  setText("inventoryBuyBtnLabel",  t.purchaseBtn);
+  setText("recordUpdateBtnLabel",  t.recordUpdateBtn);
+  setText("addEditItemLabel",      t.addEditItem);
+  setPlace("manualNote",           t.noteOptional);
+
+  // ── AI Decision Intelligence ────────────────────────────
+  setText("aiIntelSectionTitle",   t.aiIntelTitle);
+  setText("aiIntelSectionSub",     t.aiIntelSub);
+  setText("insightsRefreshBtnLabel", t.generateInsights);
+  setText("tabCopilot",            t.tabCopilot);
+  setText("tabPricing",            t.tabPricing);
+  setText("tabSupply",             t.tabSupply);
+  setText("tabPromo",              t.tabPromo);
+  setText("tabLeakage",            t.tabLeakage);
+  setText("priorityActionsTitle",  t.priorityActions);
+  setText("askCopilotTitle",       t.askCopilot);
+  setText("askCopilotSubEl",       t.askCopilotSub);
+  setPlace("copilotInput",         t.copilotPlaceholder);
+  setText("copilotSendBtn",        t.askBtn);
+  setText("copilotQProfit",        t.qWhyProfit);
+  setText("copilotQSupplier",      t.qSupplier);
+  setText("copilotQWhatIf",        t.qWhatIf);
+  setText("copilotQTopItems",      t.qTopItems);
+  setText("copilotQDebtor",        t.qDebtor);
+  setText("rootCauseTitle",        t.rootCauseTitle);
+  setText("pricingCardTitle",      t.pricingTitle);
+  setText("pricingCardSub",        t.pricingSub);
+  setText("demandCardTitle",       t.demandTitle);
+  setText("demandCardSub",         t.demandSub);
+  setText("purchaseCardTitle",     t.purchaseTitle);
+  setText("purchaseCardSub",       t.purchaseSub);
+  setText("supplierCardTitle",     t.supplierTitle);
+  setText("supplierCardSub",       t.supplierSub);
+  setText("promoCardTitle",        t.promoTitle);
+  setText("promoCardSub",          t.promoSub);
+  setText("bundleCardTitle",       t.bundleTitle);
+  setText("bundleCardSub",         t.bundleSub);
+  setText("leakageBreakdownTitle", t.leakageBreakdown);
+  setText("recoveryActionsTitle",  t.recoveryActions);
+
+  // ── Day Close ───────────────────────────────────────────
+  setText("dayCloseSectionTitle",  t.dayCloseTitle);
+  setText("dayCloseSectionSub",    t.dayCloseSub);
+  setText("closeTodayCardTitle",   t.closeTodayTitle);
+  setText("cashOnHandLabel",       t.cashOnHand);
+  setPlace("closeNote",            t.closeNote);
+  setText("lockSnapshotBtn",       t.lockSnapshot);
+  setText("recentSnapshotsLabel",  t.recentSnapshots);
+  setText("exportLedgerCardTitle", t.exportLedgerTitle);
+  setText("exportLedgerCardSub",   t.exportLedgerSub);
+  setText("downloadMonthBtn",      t.downloadMonth);
+  setText("downloadAllBtn",        t.downloadAll);
+
+  // ── AI Chat section ─────────────────────────────────────
+  setText("aiChatSectionTitle",    t.aiChatTitle);
+  setHtml("aiChatSectionSub",      t.aiChatSub);
+
+  // ── Monthly Narrative ──────────────────────────────────────
+  setText("narrativeSectionTitle", t.narrativeSectionTitle);
+  setText("narrativeSectionSub",   t.narrativeSectionSub);
+  setText("accountantsNoteTitle",  t.accountantsNote);
+  setText("narrativeRefreshBtn",   t.narrativeRefresh);
+  setText("narrativePlaceholder",  t.narrativePlaceholder);
+  setText("expenseBreakdownTitle", t.expenseBreakdown);
+  setText("noExpenseData",         t.noExpenseData);
+
+  // ── AI Chat chips ─────────────────────────────────────────
+  setText("chatQ1", t.chatQ1);
+  setText("chatQ2", t.chatQ2);
+  setText("chatQ3", t.chatQ3);
+  setText("chatQ4", t.chatQ4);
+  setPlace("chatQuestion", t.chatPlaceholder);
+  setText("chatAskBtn",  t.chatAsk);
+
+  // ── Inventory input placeholders ────────────────────────────
+  setPlace("manualQty",   t.quantity);
+  setPlace("manualPrice", t.pricePerUnit);
+  const manualItem = document.getElementById('manualItem');
+  if (manualItem && manualItem.options[0]) manualItem.options[0].textContent = t.selectItem;
 }
 
 /* ══════════════════════════════════════
@@ -2538,16 +2816,17 @@ async function askLedgerChat() {
    MONTHLY NARRATIVE
 ══════════════════════════════════════ */
 async function loadNarrative() {
+  const t  = s();
   const el = document.getElementById('narrativeText');
   if (!el) return;
-  el.innerHTML = '<span style="color:var(--text-3);font-style:italic;">Generating accountant\'s note…</span>';
+  el.innerHTML = `<span style="color:var(--text-3);font-style:italic;">${currentLang === 'hindi' ? 'विवरण तैयार हो रहा है…' : currentLang === 'telugu' ? 'వివరణ తయారవుతోంది…' : 'Generating narrative…'}</span>`;
   try {
-    const r   = await fetch('/api/dashboard/narrative');
+    const r   = await fetch(`/api/dashboard/narrative?language=${currentLang}`);
     const d   = await r.json();
     el.style.fontStyle = 'normal';
-    el.innerHTML = d.narrative ? d.narrative.replace(/\n/g,'<br>') : 'No data for this period.';
+    el.innerHTML = d.narrative ? d.narrative.replace(/\n/g,'<br>') : t.noExpenseData;
   } catch(e) {
-    el.textContent = 'Failed to generate narrative. Please try again.';
+    el.textContent = t.copilotError;
   }
 }
 
@@ -2691,7 +2970,7 @@ async function loadInsights() {
   empty.style.display   = 'none';
 
   try {
-    const res  = await fetch('/api/dashboard/insights');
+    const res  = await fetch(`/api/dashboard/insights?language=${currentLang}`);
     const data = await res.json();
 
     loading.style.display = 'none';
@@ -2722,15 +3001,16 @@ async function loadInsights() {
 
 // ── Render: Health Banner ──────────────────────────────────
 function renderHealthBanner(copilot) {
+  const t = s();
   const banner = document.getElementById('copilotHealthBanner');
   if (!copilot.health_status) { banner.style.display = 'none'; return; }
   const icons   = { good: '✅', warning: '⚠️', critical: '🚨' };
-  const titles  = { good: 'Business Health: Good', warning: 'Business Health: Needs Attention', critical: 'Business Health: Critical' };
+  const titles  = { good: t.healthGood, warning: t.healthWarning, critical: t.healthCritical };
   banner.className = `copilot-health health-${copilot.health_status}`;
   banner.innerHTML = `
     <div class="health-icon">${icons[copilot.health_status] || '📊'}</div>
     <div>
-      <div class="health-title">${titles[copilot.health_status] || 'Business Status'}</div>
+      <div class="health-title">${titles[copilot.health_status] || copilot.health_status}</div>
       <div class="health-label">${copilot.health_label || ''}</div>
     </div>`;
   banner.style.display = 'flex';
@@ -2738,8 +3018,9 @@ function renderHealthBanner(copilot) {
 
 // ── Render: Priority Actions ───────────────────────────────
 function renderPriorityActions(actions) {
+  const t = s();
   const el = document.getElementById('priorityActionsList');
-  if (!actions.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No priority actions — your business looks healthy!</div>'; return; }
+  if (!actions.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noPriorityActions}</div>`; return; }
   el.innerHTML = actions.map(a => `
     <div class="priority-action">
       <div class="priority-rank">${a.rank || '•'}</div>
@@ -2750,8 +3031,9 @@ function renderPriorityActions(actions) {
 
 // ── Render: Root Causes ────────────────────────────────────
 function renderRootCauses(causes) {
+  const t = s();
   const el = document.getElementById('rootCausesList');
-  if (!causes.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No negative trends detected.</div>'; return; }
+  if (!causes.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noNegativeTrends}</div>`; return; }
   el.innerHTML = causes.map(c => `
     <div style="padding:5px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;font-size:.78rem;color:var(--text-2);">
       ${c}
@@ -2788,7 +3070,7 @@ async function applyPrice(itemName, price) {
       body: JSON.stringify({ item_name: itemName, new_price: price })
     });
     if (res.ok) {
-      btn.textContent = '✓ Applied';
+      btn.textContent = s().appliedLabel;
       btn.classList.add('applied');
       loadInventory && loadInventory(); // refresh stock panel if function exists
     } else {
@@ -2802,8 +3084,10 @@ async function applyPrice(itemName, price) {
 
 // ── Render: Demand Forecast ────────────────────────────────
 function renderDemand(items) {
+  const t = s();
   const el = document.getElementById('demandList');
-  if (!items.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No demand data yet.</div>'; return; }
+  if (!items.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noDemandData}</div>`; return; }
+  const urgencyMap = { high: t.highUrgency, medium: t.mediumUrgency, low: t.lowUrgency };
   el.innerHTML = items.map(item => {
     const urgency  = (item.reorder_urgency || 'low').toLowerCase();
     const barW     = urgency === 'high' ? 90 : urgency === 'medium' ? 55 : 20;
@@ -2812,10 +3096,10 @@ function renderDemand(items) {
       <div class="demand-row">
         <div class="demand-header">
           <span class="demand-name">${item.item_name || ''}</span>
-          <span class="insight-badge badge-${urgency}">${urgency} urgency</span>
+          <span class="insight-badge badge-${urgency}">${urgencyMap[urgency] || urgency}</span>
         </div>
         <div style="font-size:.73rem;color:var(--text-3);margin-bottom:4px;">
-          Stock: ${(item.current_stock||0)} ${item.unit||'units'} · ~${days} days left · Reorder: ${item.recommended_reorder_qty||'?'} ${item.unit||''}
+          ${t.stockLabel} ${(item.current_stock||0)} ${item.unit||''} · ~${days} ${t.daysLeft} · ${t.reorderLabel} ${item.recommended_reorder_qty||'?'} ${item.unit||''}
         </div>
         <div class="demand-bar-wrap">
           <div class="demand-bar bar-${urgency}" style="width:${barW}%;"></div>
@@ -2826,8 +3110,9 @@ function renderDemand(items) {
 
 // ── Render: Purchase Optimizer ─────────────────────────────
 function renderPurchase(recs) {
+  const t = s();
   const el = document.getElementById('purchaseList');
-  if (!recs.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No purchase recommendations yet.</div>'; return; }
+  if (!recs.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noPurchaseData}</div>`; return; }
   el.innerHTML = recs.map(rec => {
     const itemsHtml = (rec.items || []).map(i =>
       `<div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-2);padding:3px 0;">
@@ -2841,45 +3126,47 @@ function renderPurchase(recs) {
           <div style="font-size:.82rem;font-weight:700;color:var(--amber);">₹${(rec.total_estimated_cost||0).toLocaleString('en-IN')}</div>
         </div>
         ${itemsHtml}
-        <div style="margin-top:8px;font-size:.72rem;color:var(--text-3);">Coverage: ~${rec.coverage_days||'?'} days · ${rec.rationale||''}</div>
+        <div style="margin-top:8px;font-size:.72rem;color:var(--text-3);">${t.coverageLabel} ~${rec.coverage_days||'?'} ${t.days} · ${rec.rationale||''}</div>
       </div>`;
   }).join('');
 }
 
 // ── Render: Supplier Intelligence ─────────────────────────
 function renderSuppliers(suppliers) {
+  const t = s();
   const el = document.getElementById('supplierList');
-  if (!suppliers.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No supplier history yet. Record purchases to see scores.</div>'; return; }
+  if (!suppliers.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noSupplierData}</div>`; return; }
   const trendIcon = { stable: '→', rising: '↑', falling: '↓' };
   const recColor  = { continue: 'var(--teal)', watch: 'var(--amber)', replace: 'var(--red)' };
-  el.innerHTML = suppliers.map(s => `
+  el.innerHTML = suppliers.map(s2 => `
     <div class="supplier-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div class="supplier-name">${s.supplier_name||'Unknown'}</div>
-        <div style="font-size:.72rem;font-weight:700;color:${recColor[s.recommendation]||'var(--teal)'};">
-          ${(s.recommendation||'continue').toUpperCase()} ${trendIcon[s.trend]||''}
+        <div class="supplier-name">${s2.supplier_name||'Unknown'}</div>
+        <div style="font-size:.72rem;font-weight:700;color:${recColor[s2.recommendation]||'var(--teal)'};">
+          ${(s2.recommendation||'continue').toUpperCase()} ${trendIcon[s2.trend]||''}
         </div>
       </div>
       <div class="score-row">
-        <span class="score-label">Reliability</span>
-        <div class="score-bar-wrap"><div class="score-bar" style="width:${s.reliability_score||0}%;"></div></div>
-        <span class="score-val">${s.reliability_score||0}%</span>
+        <span class="score-label">${t.reliabilityLabel}</span>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:${s2.reliability_score||0}%;"></div></div>
+        <span class="score-val">${s2.reliability_score||0}%</span>
       </div>
       <div class="score-row">
-        <span class="score-label">Price Stability</span>
-        <div class="score-bar-wrap"><div class="score-bar" style="width:${s.price_stability_score||0}%;"></div></div>
-        <span class="score-val">${s.price_stability_score||0}%</span>
+        <span class="score-label">${t.priceStabilityLabel}</span>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:${s2.price_stability_score||0}%;"></div></div>
+        <span class="score-val">${s2.price_stability_score||0}%</span>
       </div>
       <div style="font-size:.72rem;color:var(--text-3);margin-top:6px;">
-        ${s.order_count||0} orders · Total: ₹${(s.total_spent||0).toLocaleString('en-IN')}
+        ${s2.order_count||0} ${t.ordersLabel} · ${t.totalLabel} ₹${(s2.total_spent||0).toLocaleString('en-IN')}
       </div>
     </div>`).join('');
 }
 
 // ── Render: Promotions ─────────────────────────────────────
 function renderPromotions(promos) {
+  const t = s();
   const el = document.getElementById('promotionList');
-  if (!promos.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No promotion recommendations yet.</div>'; return; }
+  if (!promos.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noPromoData}</div>`; return; }
   const typeClass = {
     'Weekend Discount': 'badge-weekend', 'Festival Offer': 'badge-festival',
     'Clearance Sale': 'badge-clearance', 'Combo Pack': 'badge-combo', 'BOGO': 'badge-bogo'
@@ -2894,7 +3181,7 @@ function renderPromotions(promos) {
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
           <div class="insight-metric">+${p.expected_lift_pct||0}%</div>
-          <div class="insight-metric-label">Expected Lift</div>
+          <div class="insight-metric-label">${t.expectedLift}</div>
         </div>
         <div style="font-size:.72rem;color:var(--text-3);">📅 ${p.urgency||''}</div>
       </div>
@@ -2903,8 +3190,9 @@ function renderPromotions(promos) {
 
 // ── Render: Smart Bundles ──────────────────────────────────
 function renderBundles(bundles) {
+  const t = s();
   const el = document.getElementById('bundleList');
-  if (!bundles.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:.82rem;">No bundle suggestions yet.</div>'; return; }
+  if (!bundles.length) { el.innerHTML = `<div style="color:var(--text-3);font-size:.82rem;">${t.noBundleData}</div>`; return; }
   el.innerHTML = bundles.map(b => `
     <div style="background:var(--surface-2);border:1px solid rgba(45,212,191,.15);border-radius:var(--radius);padding:14px;margin-bottom:10px;">
       <div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:6px;">🛍 ${b.bundle_name||'Bundle'}</div>
@@ -2913,14 +3201,15 @@ function renderBundles(bundles) {
       </div>
       <div style="font-size:.78rem;color:var(--text-2);margin-bottom:6px;">${b.rationale||''}</div>
       <div style="display:flex;gap:16px;">
-        <div><span class="insight-metric" style="font-size:.95rem;">${b.discount_pct||0}%</span><span class="insight-metric-label" style="margin-left:4px;">Discount</span></div>
-        <div><span class="insight-metric" style="font-size:.95rem;">+${b.basket_value_lift_pct||0}%</span><span class="insight-metric-label" style="margin-left:4px;">Basket Lift</span></div>
+        <div><span class="insight-metric" style="font-size:.95rem;">${b.discount_pct||0}%</span><span class="insight-metric-label" style="margin-left:4px;">${t.discountLabel}</span></div>
+        <div><span class="insight-metric" style="font-size:.95rem;">+${b.basket_value_lift_pct||0}%</span><span class="insight-metric-label" style="margin-left:4px;">${t.basketLift}</span></div>
       </div>
     </div>`).join('');
 }
 
 // ── Render: Profit Leakage ─────────────────────────────────
 function renderLeakage(leakage) {
+  const t = s();
   const totalEl    = document.getElementById('leakageTotal');
   const listEl     = document.getElementById('leakageList');
   const actionsEl  = document.getElementById('recoveryActionsList');
@@ -2931,7 +3220,7 @@ function renderLeakage(leakage) {
   if (total > 0) {
     totalEl.innerHTML = `
       <div class="leakage-amount">₹${total.toLocaleString('en-IN')}</div>
-      <div class="leakage-label">Estimated Monthly Profit Leakage</div>`;
+      <div class="leakage-label">${t.estimatedLeakage}</div>`;
     totalEl.style.display = 'block';
   } else {
     totalEl.style.display = 'none';
@@ -2943,7 +3232,7 @@ function renderLeakage(leakage) {
     'Supplier Overpricing': '💸', 'Excess Discounts': '🏷️', 'Slow Movers': '🐌'
   };
   if (!breakdown.length) {
-    listEl.innerHTML = '<div style="color:var(--teal);font-size:.85rem;padding:12px 0;">✅ No significant leakage detected. Business looks tight!</div>';
+    listEl.innerHTML = `<div style="color:var(--teal);font-size:.85rem;padding:12px 0;">${t.noLeakageData}</div>`;
   } else {
     listEl.innerHTML = breakdown.map(b => `
       <div class="leakage-row">
@@ -2959,7 +3248,7 @@ function renderLeakage(leakage) {
 
   // Recovery actions (just re-use breakdown actions as a clean list)
   if (!breakdown.length) {
-    actionsEl.innerHTML = '<div style="color:var(--teal);font-size:.82rem;">Nothing urgent right now.</div>';
+    actionsEl.innerHTML = `<div style="color:var(--teal);font-size:.82rem;">${t.noRecoveryData}</div>`;
   } else {
     actionsEl.innerHTML = breakdown.map((b, i) => `
       <div class="priority-action">
@@ -2977,6 +3266,7 @@ function copilotQ(question) {
 }
 
 async function askCopilot() {
+  const t = s();
   const input = document.getElementById('copilotInput');
   const ansEl = document.getElementById('copilotAnswer');
   const sendBtn = document.getElementById('copilotSendBtn');
@@ -2986,24 +3276,24 @@ async function askCopilot() {
   sendBtn.textContent = '…';
   sendBtn.disabled    = true;
   ansEl.style.display  = 'block';
-  ansEl.innerHTML      = '<span style="color:var(--text-3);">Thinking…</span>';
+  ansEl.innerHTML      = `<span style="color:var(--text-3);">${t.copilotThinking}</span>`;
 
   try {
     const res  = await fetch('/api/chat/ledger', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: q })
+      body: JSON.stringify({ question: q, language: currentLang })
     });
     const data = await res.json();
-    const modeLabel = data.mode === 'what_if' ? '🔮 What-If Simulation' :
-                      data.mode === 'root_cause' ? '🔍 Root Cause Analysis' : '💬 AI Copilot';
+    const modeLabel = data.mode === 'what_if' ? t.copilotModeWhatIf :
+                      data.mode === 'root_cause' ? t.copilotModeRootCause : t.copilotModeStandard;
     ansEl.innerHTML = `
       <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);margin-bottom:6px;">${modeLabel}</div>
       <div>${(data.answer||'').replace(/\n/g,'<br>')}</div>`;
   } catch(e) {
-    ansEl.innerHTML = '<span style="color:var(--red);">Error contacting AI. Please try again.</span>';
+    ansEl.innerHTML = `<span style="color:var(--red);">${t.copilotError}</span>`;
   } finally {
-    sendBtn.textContent = 'Ask';
+    sendBtn.textContent = t.askBtn;
     sendBtn.disabled    = false;
   }
 }
