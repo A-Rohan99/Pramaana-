@@ -598,7 +598,7 @@ def parse_bank_statement_pdf(
                 f"BANK STATEMENT TEXT:\n{raw_text[:8000]}"
             )
 
-            model  = genai.GenerativeModel("gemini-2.5-flash-lite")
+            model  = genai.GenerativeModel("gemini-1.5-flash")
             result = model.generate_content(prompt)
             raw_response = result.text.strip()
 
@@ -641,8 +641,11 @@ def parse_bank_statement_pdf(
             return transactions, errors
 
         except Exception as e:
-            logger.warning("Gemini PDF parsing failed (%s), falling back to regex.", e)
-            errors.append(f"AI parsing failed: {e}. Attempted regex fallback.")
+            err_str = str(e)
+            if len(err_str) > 100:
+                err_str = err_str[:100] + "..."
+            logger.warning("Gemini PDF parsing failed (%s), falling back to regex.", err_str)
+            errors.append(f"AI parsing failed: {err_str}. Attempted regex fallback.")
 
     # ── Regex fallback ────────────────────────────────────────────────────────
     # Look for lines that contain a date + amount pattern
