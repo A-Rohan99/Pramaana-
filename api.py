@@ -1301,6 +1301,8 @@ async def ledger_chat(request: Request):
         "You are an expert AI Business Copilot for a small Indian shopkeeper (kirana/grocery/medical store). "
         "You have access to their complete financial ledger, inventory, supplier history, and sales velocity. "
         "Be warm, practical, and use ₹ for amounts. Speak like a trusted CA friend, not a corporate bot. "
+        "CRITICAL RULE: If the user's question is entirely unrelated to their business, finance, accounting, or ledger data, "
+        "politely refuse to answer and remind them that you are their AI business accountant.\n"
         f"{mode_instruction}\n"
         f"You MUST generate the entire response in the '{language.capitalize()}' language."
     )
@@ -1310,7 +1312,7 @@ async def ledger_chat(request: Request):
     )
 
     try:
-        model  = genai.GenerativeModel("gemini-2.5-flash-lite")
+        model  = genai.GenerativeModel("gemini-3.5-flash")
         result = model.generate_content(f"{system_prompt}\n\n{user_prompt}")
         answer = result.text.strip()
     except Exception as e:
@@ -1362,7 +1364,7 @@ def monthly_narrative(month: str | None = None, language: str = "english"):
     )
 
     try:
-        model     = genai.GenerativeModel("gemini-2.5-flash-lite")
+        model     = genai.GenerativeModel("gemini-3.5-flash")
         result    = model.generate_content(prompt)
         narrative = result.text.strip()
     except Exception as e:
