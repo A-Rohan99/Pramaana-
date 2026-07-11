@@ -661,19 +661,19 @@ def _telegram_poll_loop(token: str):
                         )
                         continue
 
-                # Route 3: Documents (CSV or PDF)
+                # Route 3: Documents (CSV, XLSX, or PDF)
                 elif document:
                     file_id = document["file_id"]
                     file_name = document.get("file_name", "").lower()
                     
-                    if file_name.endswith(".csv"):
+                    if file_name.endswith(".csv") or file_name.endswith(".xlsx") or file_name.endswith(".xls"):
                         try:
                             csv_bytes = _telegram_download_file(token, file_id)
-                            transactions, parse_errors = parse_csv(csv_bytes, app="auto")
+                            transactions, parse_errors = parse_csv(csv_bytes, app="auto", filename=file_name)
                             if not transactions and parse_errors:
                                 rq.post(
                                     f"{base}/sendMessage",
-                                    json={"chat_id": chat_id, "text": f"❌ Could not parse CSV: {parse_errors[0]}"},
+                                    json={"chat_id": chat_id, "text": f"❌ Could not parse file: {parse_errors[0]}"},
                                     timeout=10,
                                 )
                                 continue
@@ -779,7 +779,7 @@ def _telegram_poll_loop(token: str):
                     else:
                         rq.post(
                             f"{base}/sendMessage",
-                            json={"chat_id": chat_id, "text": "❌ Unsupported document format. Please send a .csv or .pdf file."},
+                            json={"chat_id": chat_id, "text": "❌ Unsupported document format. Please send a .csv, .xlsx, or .pdf file."},
                             timeout=10,
                         )
                         continue
