@@ -11,6 +11,7 @@ sentence-transformers==3.1.1
 python-dotenv==1.0.1
 requests==2.32.3
 openai-whisper==20240930
+openpyxl==3.1.5
 # Local, offline translation (AI4Bharat IndicTrans2) -- no API key.
 # IndicTransToolkit isn't on PyPI, so it's installed straight from its
 # git repo; pip supports this line directly.

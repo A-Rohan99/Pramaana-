@@ -921,28 +921,33 @@ async def import_csv(
     language: str        = Form("english"),
 ):
     """
-    Bulk-import a UPI transaction CSV exported from PhonePe, Google Pay, or Paytm.
+    Bulk-import a transaction CSV or XLSX exported from:
+      PhonePe, Google Pay, Paytm (CSV & XLSX),
+      HDFC, SBI, ICICI, Axis, Kotak bank statements,
+      or any generic CSV/XLSX with debit/credit columns.
+
     Each row is parsed into a transaction dict and run through the full pipeline.
     Clean transactions are inserted into the active monthly ledger.
 
-    app_name: 'phonepe' | 'gpay' | 'paytm' | 'auto'  (default: auto-detect)
+    app_name: 'phonepe' | 'gpay' | 'paytm' | 'hdfc' | 'sbi' | 'icici' | 'axis' | 'kotak' | 'auto'
     Returns:  { imported, skipped, flagged, errors, results }
     """
-    if not file.filename or not file.filename.lower().endswith(".csv"):
-        raise HTTPException(status_code=400, detail="Please upload a .csv file.")
+    fname = (file.filename or "").lower()
+    if not any(fname.endswith(ext) for ext in (".csv", ".xlsx", ".xls")):
+        raise HTTPException(status_code=400, detail="Please upload a .csv or .xlsx file.")
 
     contents = await file.read()
     if len(contents) > 5 * 1024 * 1024:  # 5 MB limit
-        raise HTTPException(status_code=413, detail="CSV file too large (max 5 MB).")
+        raise HTTPException(status_code=413, detail="File too large (max 5 MB).")
 
     language = validate_language(language)
 
-    # Parse the CSV into normalised transaction rows
-    transactions, parse_errors = parse_csv(contents, app=app_name)
+    # Parse the file into normalised transaction rows
+    transactions, parse_errors = parse_csv(contents, app=app_name, filename=file.filename or "")
     if not transactions and parse_errors:
         raise HTTPException(
             status_code=422,
-            detail=f"Could not parse CSV: {parse_errors[0]}",
+            detail=f"Could not parse file: {parse_errors[0]}",
         )
 
     imported = 0
