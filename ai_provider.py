@@ -40,7 +40,7 @@ def _call_groq(prompt: str, system: str = "", max_tokens: int = 1500) -> str | N
         messages.append({"role": "user", "content": prompt})
 
         payload = _json.dumps({
-            "model": "llama-3.1-70b-versatile",
+            "model": "llama-3.3-70b-versatile",
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.3,
@@ -52,6 +52,7 @@ def _call_groq(prompt: str, system: str = "", max_tokens: int = 1500) -> str | N
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {api_key}",
+                "User-Agent": "Mozilla/5.0 (Pramaan AI Accountant Bot)",
             },
             method="POST",
         )
