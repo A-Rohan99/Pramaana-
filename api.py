@@ -1237,8 +1237,7 @@ async def ledger_chat(request: Request):
     Body: {question: str, month: str|null}
     """
     import json as _json
-    import google.generativeai as genai
-    import os as _os
+    from ai_provider import call_ai
 
     body     = await request.json()
     question = (body.get("question") or "").strip()
@@ -1247,8 +1246,6 @@ async def ledger_chat(request: Request):
 
     if not question:
         raise HTTPException(status_code=400, detail="question is required")
-
-    genai.configure(api_key=_os.environ.get("GEMINI_API_KEY", ""))
 
     # Gather rich context including supplier + memory
     stats      = db.get_stats(month)
@@ -1262,7 +1259,7 @@ async def ledger_chat(request: Request):
 
     # Detect question mode for richer system prompt
     q_lower = question.lower()
-    is_why   = any(w in q_lower for w in ["why", "reason", "cause", "because", "decline", "decrease", "drop"])
+    is_why     = any(w in q_lower for w in ["why", "reason", "cause", "because", "decline", "decrease", "drop"])
     is_what_if = any(w in q_lower for w in ["what if", "what happens if", "if i", "simulate", "suppose"])
 
     if is_what_if:
@@ -1315,13 +1312,9 @@ async def ledger_chat(request: Request):
         f"Question: {question}"
     )
 
-    try:
-        model  = genai.GenerativeModel("gemini-3.5-flash")
-        result = model.generate_content(f"{system_prompt}\n\n{user_prompt}")
-        answer = result.text.strip()
-    except Exception as e:
-        logger.error("AI Copilot LLM error: %s", e)
-        answer = "Sorry, I couldn't process that right now. Please try again in a moment."
+    answer = call_ai(user_prompt, system=system_prompt)
+    if not answer:
+        answer = "AI is currently unavailable. Please add a GROQ_API_KEY to your .env for unlimited free AI, or try again later."
 
     return {"question": question, "answer": answer, "mode": "what_if" if is_what_if else "root_cause" if is_why else "standard"}
 
@@ -1345,10 +1338,7 @@ def monthly_narrative(month: str | None = None, language: str = "english"):
         return {"narrative": cached["data"]}
 
     import json as _json
-    import google.generativeai as genai
-    import os as _os
-
-    genai.configure(api_key=_os.environ.get("GEMINI_API_KEY", ""))
+    from ai_provider import call_ai
 
     stats     = db.get_stats(month)
     breakdown = db.get_category_breakdown(month)
@@ -1367,21 +1357,17 @@ def monthly_narrative(month: str | None = None, language: str = "english"):
         "recent_snapshots": snapshots[:7],
     }
 
-    prompt = (
+    system_prompt = (
         "You are a friendly accountant summarising a small Indian shopkeeper's month. "
         "Write 3–5 sentences in a warm, plain tone — like a friend who is also a CA. "
         "Highlight key wins, one concern to watch, and end with a practical tip. "
-        "Use ₹ for amounts. Do NOT use bullet points — write flowing prose.\n"
-        f"You MUST generate the entire summary in the '{language.capitalize()}' language.\n\n"
-        f"Financial data:\n{_json.dumps(context, ensure_ascii=False, indent=2)}"
+        "Use ₹ for amounts. Do NOT use bullet points — write flowing prose."
+        f" You MUST generate the entire summary in the '{language.capitalize()}' language."
     )
+    user_prompt = f"Financial data:\n{_json.dumps(context, ensure_ascii=False, indent=2)}"
 
-    try:
-        model     = genai.GenerativeModel("gemini-3.5-flash")
-        result    = model.generate_content(prompt)
-        narrative = result.text.strip()
-    except Exception as e:
-        logger.error("Narrative LLM error: %s", e)
+    narrative = call_ai(user_prompt, system=system_prompt)
+    if not narrative:
         earnings  = stats.get("total_earnings", 0)
         spendings = stats.get("total_spendings", 0)
         pnl       = stats.get("net_profit_loss", 0)

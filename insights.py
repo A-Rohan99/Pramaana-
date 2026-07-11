@@ -274,26 +274,9 @@ def _rule_based_insights(inventory: list, suppliers: list, velocity: list) -> di
 # ---------------------------------------------------------------------------
 
 def _call_gemini(prompt: str) -> dict | None:
-    """Single attempt to call gemini-3.5-flash and parse JSON response."""
-    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if not api_key or api_key in ("your_gemini_api_key", ""):
-        return None
-    try:
-        import google.generativeai as genai
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-3.5-flash")
-        result = model.generate_content(prompt)
-        raw = result.text.strip()
-        # Strip markdown fences if present
-        raw = re.sub(r"^```(?:json)?\s*", "", raw, flags=re.MULTILINE)
-        raw = re.sub(r"\s*```$", "", raw, flags=re.MULTILINE)
-        return json.loads(raw)
-    except json.JSONDecodeError as e:
-        logger.warning("Insights LLM returned invalid JSON: %s", e)
-        return None
-    except Exception as e:
-        logger.warning("Insights LLM call failed: %s", e)
-        return None
+    """Call AI provider (Groq → Gemini → None). Parse JSON response."""
+    from ai_provider import call_ai_json
+    return call_ai_json(prompt)
 
 
 def _build_snapshot(
