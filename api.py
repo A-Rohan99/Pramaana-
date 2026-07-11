@@ -51,6 +51,10 @@ from rate_limiter import is_rate_limited
 from scheme_check import build_collection, search_schemes
 from csv_importer import parse_csv
 
+# ── In-memory AI response cache (avoids burning Gemini quota on every poll) ───
+_AI_CACHE: dict = {}          # key -> {"ts": float, "data": any}
+_AI_CACHE_TTL = 600           # 10 minutes
+
 # ── App setup ─────────────────────────────────────────────────────────────────
 app = FastAPI(title="Pramaan API", version="2.0")
 
@@ -1331,6 +1335,15 @@ def monthly_narrative(month: str | None = None, language: str = "english"):
     """
     Generate a plain-language accountant's summary of the month's financials.
     """
+    language = validate_language(language)
+
+    # --- Cache check (10-minute TTL) ---
+    cache_key = f"narrative:{month}:{language}"
+    cached = _AI_CACHE.get(cache_key)
+    if cached and (time.time() - cached["ts"]) < _AI_CACHE_TTL:
+        logger.info("Serving narrative from cache")
+        return {"narrative": cached["data"]}
+
     import json as _json
     import google.generativeai as genai
     import os as _os
@@ -1382,6 +1395,8 @@ def monthly_narrative(month: str | None = None, language: str = "english"):
             from translate import translate_text
             narrative = translate_text(narrative, language)
 
+    # Store in cache
+    _AI_CACHE[cache_key] = {"ts": time.time(), "data": narrative}
     return {"month": stats.get("active_month"), "narrative": narrative}
 
 
@@ -1491,6 +1506,15 @@ async def get_insights(month: str | None = None, language: str = "english"):
     """
     from insights import generate_insights
 
+    language = validate_language(language)
+
+    # --- Cache check (10-minute TTL) ---
+    cache_key = f"insights:{month}:{language}"
+    cached = _AI_CACHE.get(cache_key)
+    if cached and (time.time() - cached["ts"]) < _AI_CACHE_TTL:
+        logger.info("Serving insights from cache (key=%s)", cache_key)
+        return cached["data"]
+
     inventory = db.get_inventory()
     stats     = db.get_stats(month)
     velocity  = db.get_sales_velocity(days=90)
@@ -1508,9 +1532,12 @@ async def get_insights(month: str | None = None, language: str = "english"):
     )
 
     # Persist updated business memory if LLM returned one
-    if result.get("business_memory_update"):
-        db.set_business_memory(result["business_memory_update"])
+    updated_memory = result.get("business_memory")
+    if updated_memory and isinstance(updated_memory, dict):
+        db.update_business_memory(updated_memory)
 
+    # Store in cache
+    _AI_CACHE[cache_key] = {"ts": time.time(), "data": result}
     return result
 
 

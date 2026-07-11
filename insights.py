@@ -274,14 +274,14 @@ def _rule_based_insights(inventory: list, suppliers: list, velocity: list) -> di
 # ---------------------------------------------------------------------------
 
 def _call_gemini(prompt: str) -> dict | None:
-    """Single attempt to call gemini-2.5-flash-lite and parse JSON response."""
+    """Single attempt to call gemini-3.5-flash and parse JSON response."""
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key or api_key in ("your_gemini_api_key", ""):
         return None
     try:
         import google.generativeai as genai
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-2.5-flash-lite")
+        model = genai.GenerativeModel("gemini-3.5-flash")
         result = model.generate_content(prompt)
         raw = result.text.strip()
         # Strip markdown fences if present
