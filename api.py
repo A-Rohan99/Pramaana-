@@ -747,32 +747,83 @@ def _telegram_poll_loop(token: str):
                     elif file_name.endswith(".pdf"):
                         try:
                             pdf_bytes = _telegram_download_file(token, file_id)
-                            import io
-                            import pypdf
-                            pdf_reader = pypdf.PdfReader(io.BytesIO(pdf_bytes))
-                            pdf_text = ""
-                            for page in pdf_reader.pages:
-                                page_text = page.extract_text()
-                                if page_text:
-                                    pdf_text += page_text + "\n"
-                            text = pdf_text.strip()
-                            if not text:
+                            from csv_importer import parse_bank_statement_pdf
+                            rq.post(
+                                f"{base}/sendMessage",
+                                json={"chat_id": chat_id, "text": "📄 PDF received. Extracting transactions with AI…"},
+                                timeout=10,
+                            )
+                            transactions, parse_errors = parse_bank_statement_pdf(pdf_bytes, language="english")
+
+                            if not transactions:
+                                err_msg = parse_errors[0] if parse_errors else "No transactions found in this PDF."
                                 rq.post(
                                     f"{base}/sendMessage",
-                                    json={"chat_id": chat_id, "text": "❌ PDF parsing failed: no readable text found in PDF."},
+                                    json={"chat_id": chat_id, "text": f"❌ {err_msg}"},
                                     timeout=10,
                                 )
                                 continue
+
+                            imported = 0
+                            skipped  = 0
+                            flagged  = 0
+                            for txn in transactions:
+                                raw_txn_text = txn.get("raw_text", "")
+                                if not raw_txn_text:
+                                    skipped += 1
+                                    continue
+                                try:
+                                    res = process_message(
+                                        raw_text=raw_txn_text,
+                                        channel="telegram_pdf",
+                                        sender_id=sender,
+                                    )
+                                    override_fields = {
+                                        k: v for k, v in txn.items()
+                                        if k not in ("raw_text", "source") and v is not None
+                                    }
+                                    if override_fields.get("amount"):
+                                        msg_id = res["id"]
+                                        set_clauses = ", ".join(
+                                            f"{k}=:{k}" for k in override_fields
+                                            if k in ("amount", "txn_direction", "txn_date",
+                                                     "counterparty_name", "payment_method", "upi_reference")
+                                        )
+                                        if set_clauses:
+                                            with db._lock:
+                                                db.get_conn().execute(
+                                                    f"UPDATE messages SET {set_clauses} WHERE id=:id",
+                                                    {**override_fields, "id": msg_id},
+                                                )
+                                                db.get_conn().commit()
+                                    ls = res.get("ledger_status", "n/a")
+                                    if ls == "flagged":
+                                        flagged += 1
+                                    elif ls in ("draft", "confirmed"):
+                                        imported += 1
+                                    else:
+                                        skipped += 1
+                                except Exception as txn_err:
+                                    logger.error("Telegram PDF row error: %s", txn_err)
+                                    skipped += 1
+
+                            summary = (
+                                f"📊 *PDF Import Completed*\n"
+                                f"🟢 Imported: {imported}\n"
+                                f"🟡 Skipped: {skipped}\n"
+                                f"🔴 Flagged Scams: {flagged}"
+                            )
                             rq.post(
                                 f"{base}/sendMessage",
-                                json={"chat_id": chat_id, "text": f"📄 PDF Parsed ({len(pdf_reader.pages)} page(s)):\n```\n{text[:500]}\n```", "parse_mode": "Markdown"},
+                                json={"chat_id": chat_id, "text": summary, "parse_mode": "Markdown"},
                                 timeout=10,
                             )
+                            continue
                         except Exception as pe:
                             logger.error("Telegram PDF processing failed: %s", pe)
                             rq.post(
                                 f"{base}/sendMessage",
-                                json={"chat_id": chat_id, "text": f"❌ PDF parsing failed: {str(pe)}"},
+                                json={"chat_id": chat_id, "text": f"❌ PDF import failed: {str(pe)}"},
                                 timeout=10,
                             )
                             continue
@@ -933,17 +984,22 @@ async def import_csv(
     Returns:  { imported, skipped, flagged, errors, results }
     """
     fname = (file.filename or "").lower()
-    if not any(fname.endswith(ext) for ext in (".csv", ".xlsx", ".xls")):
-        raise HTTPException(status_code=400, detail="Please upload a .csv or .xlsx file.")
+    if not any(fname.endswith(ext) for ext in (".csv", ".xlsx", ".xls", ".pdf")):
+        raise HTTPException(status_code=400, detail="Please upload a .csv, .xlsx, or .pdf file.")
 
     contents = await file.read()
-    if len(contents) > 5 * 1024 * 1024:  # 5 MB limit
-        raise HTTPException(status_code=413, detail="File too large (max 5 MB).")
+    if len(contents) > 10 * 1024 * 1024:  # 10 MB limit (PDFs can be larger)
+        raise HTTPException(status_code=413, detail="File too large (max 10 MB).")
 
     language = validate_language(language)
 
-    # Parse the file into normalised transaction rows
-    transactions, parse_errors = parse_csv(contents, app=app_name, filename=file.filename or "")
+    # Route PDF through the dedicated AI-powered PDF parser
+    if fname.endswith(".pdf"):
+        from csv_importer import parse_bank_statement_pdf
+        transactions, parse_errors = parse_bank_statement_pdf(contents, language=language)
+    else:
+        # Parse CSV / XLSX into normalised transaction rows
+        transactions, parse_errors = parse_csv(contents, app=app_name, filename=file.filename or "")
     if not transactions and parse_errors:
         raise HTTPException(
             status_code=422,

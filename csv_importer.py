@@ -522,3 +522,172 @@ def _generic_parse(data_rows: list[dict]) -> list[dict]:
         })
 
     return results
+
+
+# ── PDF Bank Statement Parser ─────────────────────────────────────────────────
+
+def extract_pdf_text(pdf_bytes: bytes) -> str:
+    """
+    Extract all text from a PDF file (digital/online PDFs with embedded text).
+    Returns empty string if the PDF has no readable text (i.e. scanned image).
+    """
+    try:
+        import io as _io
+        import pypdf
+        reader = pypdf.PdfReader(_io.BytesIO(pdf_bytes))
+        pages_text = []
+        for page in reader.pages:
+            t = page.extract_text()
+            if t:
+                pages_text.append(t)
+        return "\n".join(pages_text).strip()
+    except Exception as e:
+        logger.error("PDF text extraction failed: %s", e)
+        return ""
+
+
+def parse_bank_statement_pdf(
+    pdf_bytes: bytes,
+    language: str = "english",
+) -> tuple[list[dict], list[str]]:
+    """
+    Parse a digital bank statement PDF into structured transactions.
+
+    Strategy:
+      1. Extract all text from the PDF using pypdf.
+      2. Send the raw text to Gemini and ask it to return a structured JSON
+         list of transactions (date, description, debit, credit, reference).
+      3. Normalise the Gemini output through the same direction resolver as CSV.
+      4. Fall back to regex heuristics if Gemini is unavailable.
+
+    Returns (transactions, errors) — same contract as parse_csv().
+    """
+    import json as _json
+    import os as _os
+
+    raw_text = extract_pdf_text(pdf_bytes)
+    if not raw_text:
+        return [], [
+            "No readable text found in PDF. "
+            "This appears to be a scanned image — please upload a digital/online PDF statement."
+        ]
+
+    # ── Gemini extraction ─────────────────────────────────────────────────────
+    api_key = _os.environ.get("GEMINI_API_KEY", "")
+    transactions: list[dict] = []
+    errors: list[str] = []
+
+    if api_key:
+        try:
+            import google.generativeai as genai
+            genai.configure(api_key=api_key)
+
+            prompt = (
+                "You are a bank statement parser. Extract ALL transaction rows from the following bank "
+                "statement text and return ONLY a valid JSON array. Each element must be an object with "
+                "these exact keys:\n"
+                "  date        (string, ISO format YYYY-MM-DD if possible, else as-is)\n"
+                "  description (string, the narration/remarks)\n"
+                "  debit       (number or null — money going OUT)\n"
+                "  credit      (number or null — money coming IN)\n"
+                "  reference   (string, UTR/cheque/ref number if present, else \"\")\n\n"
+                "Rules:\n"
+                "- Do NOT invent data. If a field is missing, use null or \"\".\n"
+                "- Ignore header rows, footer rows, opening balance, and closing balance rows.\n"
+                "- Return ONLY the JSON array, no markdown fences, no explanation.\n\n"
+                f"BANK STATEMENT TEXT:\n{raw_text[:8000]}"
+            )
+
+            model  = genai.GenerativeModel("gemini-2.5-flash-lite")
+            result = model.generate_content(prompt)
+            raw_response = result.text.strip()
+
+            # Strip markdown code fences if present
+            raw_response = re.sub(r"^```[a-z]*\n?", "", raw_response)
+            raw_response = re.sub(r"\n?```$", "", raw_response).strip()
+
+            rows = _json.loads(raw_response)
+            if not isinstance(rows, list):
+                raise ValueError("Gemini did not return a list")
+
+            for i, row in enumerate(rows):
+                debit_val  = row.get("debit")
+                credit_val = row.get("credit")
+
+                # Normalise to strings for _direction_from_debit_credit
+                debit_str  = str(debit_val)  if debit_val  not in (None, "", "null") else ""
+                credit_str = str(credit_val) if credit_val not in (None, "", "null") else ""
+
+                direction, amount = _direction_from_debit_credit(debit_str, credit_str)
+                if not amount:
+                    continue
+
+                desc = str(row.get("description", "")).strip()
+                date_str = str(row.get("date", "")).strip()
+                ref  = str(row.get("reference", "")).strip()
+
+                transactions.append({
+                    "raw_text":          f"PDF Bank Statement: {desc} ₹{amount}",
+                    "amount":            amount,
+                    "txn_direction":     direction,
+                    "txn_date":          _parse_date(date_str),
+                    "counterparty_name": _extract_counterparty(desc),
+                    "payment_method":    "Bank Transfer",
+                    "upi_reference":     ref,
+                    "source":            "pdf_bank_statement",
+                })
+
+            logger.info("PDF statement parsed via Gemini: %d transactions", len(transactions))
+            return transactions, errors
+
+        except Exception as e:
+            logger.warning("Gemini PDF parsing failed (%s), falling back to regex.", e)
+            errors.append(f"AI parsing failed: {e}. Attempted regex fallback.")
+
+    # ── Regex fallback ────────────────────────────────────────────────────────
+    # Look for lines that contain a date + amount pattern
+    date_amount_pattern = re.compile(
+        r"(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})"   # date
+        r".*?"
+        r"([\d,]+\.\d{2})"                          # amount
+        r"\s*(Dr|Cr|DR|CR)?",                       # optional debit/credit indicator
+        re.IGNORECASE,
+    )
+    for line in raw_text.splitlines():
+        m = date_amount_pattern.search(line)
+        if not m:
+            continue
+        date_str = m.group(1)
+        amount   = _parse_amount(m.group(2))
+        dr_cr    = (m.group(3) or "").upper()
+        if not amount:
+            continue
+
+        # Determine direction from Dr/Cr marker or keywords in line
+        line_lower = line.lower()
+        if dr_cr == "DR" or any(w in line_lower for w in ("debit", "dr ", "withdrawal", "paid", "transfer out")):
+            direction = "outflow"
+        elif dr_cr == "CR" or any(w in line_lower for w in ("credit", "cr ", "deposit", "received", "inward")):
+            direction = "inflow"
+        else:
+            direction = "inflow"
+
+        desc = line[:100].strip()
+        transactions.append({
+            "raw_text":          f"PDF: {desc} ₹{amount}",
+            "amount":            amount,
+            "txn_direction":     direction,
+            "txn_date":          _parse_date(date_str),
+            "counterparty_name": _extract_counterparty(desc),
+            "payment_method":    "Bank Transfer",
+            "upi_reference":     "",
+            "source":            "pdf_regex_fallback",
+        })
+
+    logger.info("PDF regex fallback: %d transactions found", len(transactions))
+    if not transactions:
+        errors.append(
+            "Could not detect transaction rows in this PDF. "
+            "Make sure you're uploading a digital bank statement PDF, not a scanned image."
+        )
+    return transactions, errors

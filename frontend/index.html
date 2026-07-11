@@ -1058,7 +1058,7 @@ details > div{padding-top:12px;}
             </div>
             <!-- ── Import CSV / XLSX panel ──────────────────────────────────── -->
             <div class="panel" data-panel="import">
-              <p id="csvImportDesc" style="font-size:.83rem;color:var(--text-2);margin-bottom:10px;">Upload a transaction history <strong>CSV or XLSX</strong> from your UPI app or bank. We'll import all clean transactions into your ledger.</p>
+              <p id="csvImportDesc" style="font-size:.83rem;color:var(--text-2);margin-bottom:10px;">Upload a transaction history <strong>CSV, XLSX, or PDF</strong> from your UPI app or bank. We'll import all clean transactions into your ledger.</p>
               <div style="margin-bottom:8px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);">UPI Apps</div>
               <div class="app-selector" id="appSelector">
                 <button class="app-btn active" data-app="auto" id="appAuto">Auto-detect</button>
@@ -1076,9 +1076,9 @@ details > div{padding-top:12px;}
               </div>
               <div class="dropzone" id="csvDropzone" tabindex="0">
                 <span class="drop-icon">📄</span>
-                <span id="csvDropLabel">Click or drag your CSV / XLSX file here</span>
+                <span id="csvDropLabel">Click or drag your CSV / XLSX / PDF file here</span>
               </div>
-              <input type="file" id="csvInput" accept=".csv,.xlsx,.xls">
+              <input type="file" id="csvInput" accept=".csv,.xlsx,.xls,.pdf">
               <div id="importResult"></div>
             </div>
           </div>
